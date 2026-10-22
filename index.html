@@ -265,14 +265,14 @@
 
         <!-- GOKU TRANSFORMATION STATUS & SELECTOR -->
         <div id="gokuEvolutionBox" class="bg-amber-950/40 border border-amber-500/40 rounded-lg p-2 flex items-center justify-between text-[9px] font-mono mb-2.5">
-          <div class="flex items-center gap-1.5">
+          <div class="flex items-center gap-1.5 cursor-pointer" onclick="cycleGokuForm()">
             <span class="text-sm">⚡</span>
             <div>
-              <div class="text-[8px] text-amber-400 font-bold uppercase tracking-wider">EVOLUZIONE SAIYAN (7 FORME)</div>
+              <div class="text-[8px] text-amber-400 font-bold uppercase tracking-wider">EVOLUZIONE SAIYAN (8 FORME)</div>
               <span id="gokuFormTitle" class="text-white font-black uppercase text-[10px]">BASE (LIVELLO 1)</span>
             </div>
           </div>
-          <button type="button" onclick="cycleGokuForm()" class="badge-cut px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-wider transition active:scale-95 shadow">
+          <button type="button" onclick="cycleGokuForm()" class="badge-cut px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-wider transition active:scale-95 shadow cursor-pointer">
             TRASFORMA ⚡
           </button>
         </div>
@@ -282,6 +282,9 @@
           
           <!-- Animated Aura Glow Layer behind character -->
           <div id="heroAuraGlow" class="absolute inset-0 pointer-events-none transition-all duration-500 animate-aura-glow" style="background: radial-gradient(circle at 50% 60%, rgba(245, 158, 11, 0.45) 0%, rgba(0,0,0,0) 70%);"></div>
+
+          <!-- Dynamic Ki Particles Canvas FX -->
+          <canvas id="heroParticlesCanvas" class="absolute inset-0 pointer-events-none z-10 w-full h-full"></canvas>
 
           <!-- Dynamic Lightning Arcs for SSJ2, SSJ3, SSJ Blue, Ultra Instinct & Devil Jin -->
           <div id="heroLightningFx" class="absolute inset-0 pointer-events-none hidden animate-sparks z-15">
@@ -1067,9 +1070,9 @@
                 <h4 class="text-sm font-black text-white uppercase">GOKU</h4>
                 <span class="text-[7px] font-arcade bg-amber-500/20 text-amber-300 border border-amber-400 px-1 py-0.5 rounded">DBZ</span>
               </div>
-              <div class="text-[8px] text-amber-400 font-bold uppercase truncate">7 FORME EVOLUTIVE</div>
+              <div class="text-[8px] text-amber-400 font-bold uppercase truncate">8 FORME EVOLUTIVE (SSJ1-3, GOD, BLUE, UI)</div>
               <div class="text-[8px] text-amber-300 bg-amber-950/60 px-1.5 py-0.5 rounded font-bold border border-amber-500/30 mt-1 inline-block">
-                ⚡ ULTRA ISTINTO (LV.12)
+                ⚡ ULTRA ISTINTO (LV.14)
               </div>
             </div>
           </div>
@@ -1310,6 +1313,170 @@
   </div>
 
   <script>
+    // --- KI & COMBAT PARTICLE ENGINE ---
+    const ParticleEngine = {
+      canvas: null,
+      ctx: null,
+      particles: [],
+      shockwaves: [],
+      currentPreset: null,
+
+      init() {
+        this.canvas = document.getElementById('heroParticlesCanvas');
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.loop();
+      },
+
+      resize() {
+        if (!this.canvas) return;
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width || 360;
+        this.canvas.height = rect.height || 420;
+      },
+
+      setPreset(preset) {
+        this.currentPreset = preset || { color: '#00f0ff', speed: 1, size: 3, count: 25 };
+        this.particles = [];
+        const count = this.currentPreset.count || 25;
+        for (let i = 0; i < count; i++) {
+          this.particles.push(this.createParticle(true));
+        }
+      },
+
+      createParticle(randomY = false) {
+        const w = (this.canvas && this.canvas.width > 0) ? this.canvas.width : 360;
+        const h = (this.canvas && this.canvas.height > 0) ? this.canvas.height : 420;
+        const p = this.currentPreset || { color: '#facc15', speed: 1.2, size: 3 };
+        const color = (p.secondaryColor && Math.random() > 0.6) ? p.secondaryColor : (p.color || '#facc15');
+        return {
+          x: w * 0.15 + Math.random() * (w * 0.7),
+          y: randomY ? Math.random() * h : h + 10,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: -(Math.random() * 1.5 + 0.8) * (p.speed || 1),
+          size: Math.random() * (p.size || 3) + 1.2,
+          alpha: Math.random() * 0.7 + 0.3,
+          color: color,
+          wobble: Math.random() * Math.PI * 2,
+          wobbleSpeed: Math.random() * 0.05 + 0.02
+        };
+      },
+
+      triggerBurst(color = '#facc15') {
+        const w = (this.canvas && this.canvas.width > 0) ? this.canvas.width : 360;
+        const h = (this.canvas && this.canvas.height > 0) ? this.canvas.height : 420;
+        const cx = w / 2;
+        const cy = h * 0.55;
+
+        // Shockwave ring
+        this.shockwaves.push({
+          x: cx,
+          y: cy,
+          radius: 10,
+          maxRadius: Math.max(w, h) * 0.8,
+          alpha: 0.9,
+          color: color || '#facc15',
+          speed: 8
+        });
+
+        // Extra burst particles
+        for (let i = 0; i < 30; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 4 + 2;
+          this.particles.push({
+            x: cx,
+            y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: Math.random() * 4 + 2,
+            alpha: 1,
+            color: color || '#facc15',
+            life: 1,
+            decay: Math.random() * 0.03 + 0.02
+          });
+        }
+      },
+
+      loop() {
+        if (this.ctx && this.canvas) {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+          // 1. Shockwaves
+          for (let i = this.shockwaves.length - 1; i >= 0; i--) {
+            const sw = this.shockwaves[i];
+            sw.radius += sw.speed;
+            sw.alpha *= 0.92;
+
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+            this.ctx.strokeStyle = sw.color;
+            this.ctx.lineWidth = 3;
+            this.ctx.globalAlpha = Math.max(0, sw.alpha);
+            this.ctx.shadowColor = sw.color;
+            this.ctx.shadowBlur = 15;
+            this.ctx.stroke();
+            this.ctx.restore();
+
+            if (sw.alpha < 0.02 || sw.radius > sw.maxRadius) {
+              this.shockwaves.splice(i, 1);
+            }
+          }
+
+          // 2. Particles
+          for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+
+            if (p.life !== undefined) {
+              // Burst particle
+              p.x += p.vx;
+              p.y += p.vy;
+              p.life -= p.decay;
+              p.alpha = Math.max(0, p.life);
+
+              this.ctx.save();
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              this.ctx.fillStyle = p.color;
+              this.ctx.globalAlpha = p.alpha;
+              this.ctx.shadowColor = p.color;
+              this.ctx.shadowBlur = 8;
+              this.ctx.fill();
+              this.ctx.restore();
+
+              if (p.life <= 0) {
+                this.particles.splice(i, 1);
+              }
+            } else {
+              // Ambient particle
+              p.wobble += p.wobbleSpeed;
+              p.x += p.vx + Math.sin(p.wobble) * 0.4;
+              p.y += p.vy;
+              p.alpha -= 0.003;
+
+              this.ctx.save();
+              this.ctx.beginPath();
+              this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+              this.ctx.fillStyle = p.color;
+              this.ctx.globalAlpha = Math.max(0, p.alpha);
+              this.ctx.shadowColor = p.color;
+              this.ctx.shadowBlur = 10;
+              this.ctx.fill();
+              this.ctx.restore();
+
+              if (p.y < -10 || p.alpha <= 0) {
+                this.particles[i] = this.createParticle(false);
+              }
+            }
+          }
+        }
+        requestAnimationFrame(() => this.loop());
+      }
+    };
+    window.ParticleEngine = ParticleEngine;
+
     // --- WEB AUDIO API SOUND FX ---
     const soundFx = {
       ctx: null,
@@ -1407,7 +1574,7 @@
       }
     };
 
-    // --- TRASFORMAZIONI GOKU (7 FORME EVOLUTIVE) ---
+    // --- TRASFORMAZIONI GOKU (8 FORME EVOLUTIVE CON PARTICELLE E ASSET UNICI) ---
     const GOKU_FORMS = [
       {
         minLevel: 1,
@@ -1422,6 +1589,7 @@
         lightningColor: null,
         filterStyle: 'drop-shadow(0 0 16px rgba(245, 158, 11, 0.55)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: false,
+        particles: { type: 'dust', color: '#f59e0b', speed: 0.9, size: 2.5, count: 20 },
         battleCry: 'KAIOKEN! SUPERA IL LIMITE!',
         quote: '"Ogni grande guerriero comincia dal primo allenamento. I polmoni puliti sono la sorgente del Ki!"'
       },
@@ -1436,8 +1604,9 @@
         themeColor: '#facc15',
         auraRgba: 'rgba(250, 204, 21, 0.65)',
         lightningColor: null,
-        filterStyle: 'drop-shadow(0 0 22px rgba(250, 204, 21, 0.8)) drop-shadow(0 15px 25px rgba(0,0,0,0.85)) brightness(1.05)',
+        filterStyle: 'drop-shadow(0 0 22px rgba(250, 204, 21, 0.8)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: false,
+        particles: { type: 'sparks', color: '#facc15', speed: 1.6, size: 3.2, count: 30 },
         battleCry: 'KAMEHAMEHA! SUPERA IL LIMITE!',
         quote: '"La rabbia contro la sigaretta è diventata potere dorato puro! Nessun limite può fermarmi!"'
       },
@@ -1447,13 +1616,14 @@
         name: 'GOKU (SUPER SAIYAN 2)',
         title: 'ASCENDED SAIYAN',
         series: 'Dragon Ball Z',
-        img: './goku_ssj1.png',
-        fullImg: './goku_ssj1.png',
+        img: './goku_ssj2.png',
+        fullImg: './goku_ssj2.png',
         themeColor: '#fbbf24',
         auraRgba: 'rgba(251, 191, 36, 0.75)',
         lightningColor: '#facc15',
-        filterStyle: 'drop-shadow(0 0 28px #fbbf24) drop-shadow(0 15px 25px rgba(0,0,0,0.85)) brightness(1.12) contrast(1.08)',
+        filterStyle: 'drop-shadow(0 0 26px #fbbf24) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: true,
+        particles: { type: 'lightning_sparks', color: '#fbbf24', speed: 2.2, size: 3.5, count: 38 },
         battleCry: 'SUPER KAMEHAMEHA! POTENZA ASSOLUTA!',
         quote: '"Senti i fulmini del Ki? Questo è il potere oltre il Super Saiyan. Carichi più pesanti in palestra!"'
       },
@@ -1463,13 +1633,14 @@
         name: 'GOKU (SUPER SAIYAN 3)',
         title: 'SUPER SAIYAN 3',
         series: 'Dragon Ball Z',
-        img: './goku_ssj1.png',
-        fullImg: './goku_ssj1.png',
+        img: './goku_ssj3.png',
+        fullImg: './goku_ssj3.png',
         themeColor: '#eab308',
         auraRgba: 'rgba(234, 179, 8, 0.85)',
         lightningColor: '#fde047',
-        filterStyle: 'drop-shadow(0 0 35px #eab308) drop-shadow(0 0 15px #f59e0b) drop-shadow(0 15px 25px rgba(0,0,0,0.85)) contrast(1.18) brightness(1.15)',
+        filterStyle: 'drop-shadow(0 0 32px #eab308) drop-shadow(0 0 15px #f59e0b) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: true,
+        particles: { type: 'storm', color: '#eab308', speed: 2.8, size: 4.0, count: 46 },
         battleCry: 'DRAGON FIST EXPLOSION! DISTRUGGI LA VOGLIA!',
         quote: '"E questo... è per andare ancora oltre! Super Saiyan 3! La voglia di fumare svanisce nel nulla!"'
       },
@@ -1479,13 +1650,14 @@
         name: 'GOKU (SSJ GOD)',
         title: 'DIVINE SAIYAN',
         series: 'Dragon Ball Super',
-        img: './goku_base.png',
-        fullImg: './goku_base.png',
+        img: './goku_god.png',
+        fullImg: './goku_god.png',
         themeColor: '#ef4444',
         auraRgba: 'rgba(239, 68, 68, 0.8)',
         lightningColor: null,
-        filterStyle: 'drop-shadow(0 0 28px #ef4444) drop-shadow(0 15px 25px rgba(0,0,0,0.85)) hue-rotate(330deg) saturate(1.4) brightness(1.1)',
+        filterStyle: 'drop-shadow(0 0 28px #ef4444) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: false,
+        particles: { type: 'embers', color: '#ef4444', secondaryColor: '#fb923c', speed: 1.3, size: 3.5, count: 35 },
         battleCry: 'GOD BIND! ENERGIA DIVINA!',
         quote: '"Il Ki degli Dei scorre nel sangue ossigenato. Calma assoluta e rigenerazione cellulare divina!"'
       },
@@ -1495,31 +1667,50 @@
         name: 'GOKU (SSJ BLUE)',
         title: 'SUPER SAIYAN GOD SS',
         series: 'Dragon Ball Super',
-        img: './goku_ssj1.png',
-        fullImg: './goku_ssj1.png',
+        img: './goku_blue.png',
+        fullImg: './goku_blue.png',
         themeColor: '#00f0ff',
         auraRgba: 'rgba(0, 240, 255, 0.85)',
         lightningColor: '#00f0ff',
-        filterStyle: 'drop-shadow(0 0 32px #00f0ff) drop-shadow(0 15px 25px rgba(0,0,0,0.85)) hue-rotate(185deg) saturate(1.3) brightness(1.1)',
+        filterStyle: 'drop-shadow(0 0 30px #00f0ff) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: true,
+        particles: { type: 'divine_vapor', color: '#00f0ff', secondaryColor: '#38bdf8', speed: 1.8, size: 3.8, count: 40 },
         battleCry: 'GOD KAMEHAMEHA x10! ZERO CEDIMENTI!',
         quote: '"Controllo assoluto del Ki divino. Zero battiti sprecati, zero fumo, concentrazione chirurgica!"'
       },
       {
         minLevel: 12,
-        id: 'ui',
-        name: 'GOKU (ULTRA ISTINTO)',
-        title: 'MASTERED ULTRA INSTINCT',
+        id: 'ui_sign',
+        name: 'GOKU (UI INCOMPLETO)',
+        title: 'ULTRA INSTINCT SIGN (SEGNO)',
         series: 'Dragon Ball Super',
-        img: './goku_ssj1.png',
-        fullImg: './goku_ssj1.png',
-        themeColor: '#e2e8f0',
-        auraRgba: 'rgba(255, 255, 255, 0.9)',
+        img: './goku_ui_sign.png',
+        fullImg: './goku_ui_sign.png',
+        themeColor: '#a855f7',
+        auraRgba: 'rgba(168, 85, 247, 0.85)',
         lightningColor: '#c084fc',
-        filterStyle: 'drop-shadow(0 0 35px #ffffff) drop-shadow(0 0 45px #818cf8) drop-shadow(0 15px 25px rgba(0,0,0,0.85)) grayscale(0.82) brightness(1.28) contrast(1.1)',
+        filterStyle: 'drop-shadow(0 0 30px #a855f7) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         hasLightning: true,
+        particles: { type: 'void_heat', color: '#a855f7', secondaryColor: '#cbd5e1', speed: 1.6, size: 3.6, count: 42 },
+        battleCry: 'IL MIO CORPO RICONOSCE IL PERICOLO! SCHIVATA ISTINTIVA!',
+        quote: '"Il calore del Ki interiore si espande: la mente si svuota da ogni craving. Il corpo reagisce istintivamente."'
+      },
+      {
+        minLevel: 14,
+        id: 'ui',
+        name: 'GOKU (ULTRA ISTINTO COMPLETO)',
+        title: 'MASTERED ULTRA INSTINCT (PERFEZIONATO)',
+        series: 'Dragon Ball Super',
+        img: './goku_ui.png',
+        fullImg: './goku_ui.png',
+        themeColor: '#ffffff',
+        auraRgba: 'rgba(255, 255, 255, 0.95)',
+        lightningColor: '#e2e8f0',
+        filterStyle: 'drop-shadow(0 0 35px #ffffff) drop-shadow(0 0 45px #818cf8) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
+        hasLightning: true,
+        particles: { type: 'celestial_stars', color: '#ffffff', secondaryColor: '#c084fc', speed: 2.2, size: 4.2, count: 52 },
         battleCry: 'IL MIO CORPO REAGISCE DA SOLO! VITTORIA TOTALE!',
-        quote: '"Il mio corpo schiva le tentazioni da solo senza sforzo. Questo è l\'Ultra Istinto: salute e potenza perfetta."'
+        quote: '"Il mio corpo schiva le tentazioni da solo senza sforzo. Questo è l\'Ultra Istinto: salute e potenza assoluta."'
       }
     ];
 
@@ -1536,6 +1727,7 @@
         fullImg: './goku_base.png',
         themeColor: '#f59e0b',
         auraRgba: 'rgba(245, 158, 11, 0.5)',
+        particles: { type: 'dust', color: '#f59e0b', speed: 0.9, size: 2.5, count: 20 },
         battleCry: 'KAMEHAMEHA! SUPERA IL TUO LIMITE!',
         quote: '"Il vero Ki si genera dai polmoni puliti! Domani al 3° allenamento della settimana aumentiamo i carichi e superiamo il limite!"',
         sosQuote: '"Concentra il tuo Ki! Fai un respiro profondo come nella Stanza dello Spirito e del Tempo!"',
@@ -1552,6 +1744,7 @@
         auraRgba: 'rgba(239, 68, 68, 0.65)',
         hasLightning: true,
         lightningColor: '#ef4444',
+        particles: { type: 'dark_feathers', color: '#ef4444', secondaryColor: '#1f2937', speed: 1.4, size: 3.5, count: 35 },
         filterStyle: 'drop-shadow(0 0 25px rgba(239, 68, 68, 0.75)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         battleCry: 'INGINOCCHIATI AL POTERE DEL DIAVOLO!',
         quote: '"Le ali del Diavolo distruggono la debolezza. Non cedere al veleno della sigaretta: scatena il potere che hai dentro."',
@@ -1566,6 +1759,7 @@
         fullImg: './bebop.png',
         themeColor: '#f97316',
         auraRgba: 'rgba(249, 115, 22, 0.55)',
+        particles: { type: 'industrial_steam', color: '#f97316', secondaryColor: '#06b6d4', speed: 1.2, size: 4.0, count: 28 },
         filterStyle: 'drop-shadow(0 0 20px rgba(249, 115, 22, 0.7)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         battleCry: 'PALLA CHIODATA N°2 PRONTA! ZERO SCAPPAMENTO!',
         quote: '"Pistoni idraulici raffreddati ad acqua e braccio chiodato pronto. Zero fumo dallo scappamento!"',
@@ -1580,6 +1774,7 @@
         fullImg: './king.png',
         themeColor: '#eab308',
         auraRgba: 'rgba(234, 179, 8, 0.55)',
+        particles: { type: 'champion_gold', color: '#eab308', speed: 1.0, size: 3.0, count: 25 },
         filterStyle: 'drop-shadow(0 0 22px rgba(234, 179, 8, 0.7)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         battleCry: 'ROAAAARRRR! GIANT SWING E DISTRUGGI LA VOGLIA!',
         quote: '"ROAAAR! Il campione pesa 78 kg e non si ferma davanti a nulla. Domani solleveremo pesi enormi!"',
@@ -1594,6 +1789,7 @@
         fullImg: './pimpi.png',
         themeColor: '#ec4899',
         auraRgba: 'rgba(236, 72, 153, 0.6)',
+        particles: { type: 'courage_hearts', color: '#ec4899', secondaryColor: '#f472b6', speed: 1.0, size: 3.5, count: 30 },
         filterStyle: 'drop-shadow(0 0 22px rgba(236, 72, 153, 0.8)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         battleCry: 'ANCHE SE SONO PICCOLO... HO UN CORAGGIO ENORME!',
         quote: '"Non importa quanto sei piccolo o se all\'inizio hai paura: ogni giorno senza fumo e ogni sollevamento ti rendono un gigante!"',
@@ -1610,6 +1806,7 @@
         auraRgba: 'rgba(0, 240, 255, 0.65)',
         hasLightning: true,
         lightningColor: '#00f0ff',
+        particles: { type: 'infinity_motes', color: '#00f0ff', secondaryColor: '#818cf8', speed: 1.5, size: 3.5, count: 40 },
         filterStyle: 'drop-shadow(0 0 25px rgba(0, 240, 255, 0.8)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         battleCry: 'ESPANSIONE DEL DOMINIO: MUGEN (INFINITO)!',
         quote: '"Non preoccuparti, io sono il più forte. Tra te e la voglia di fumare c\'è l\'Infinito: nulla può toccarti."',
@@ -1624,6 +1821,7 @@
         fullImg: './guts.png',
         themeColor: '#94a3b8',
         auraRgba: 'rgba(148, 163, 184, 0.6)',
+        particles: { type: 'berserk_embers', color: '#94a3b8', secondaryColor: '#b91c1c', speed: 1.3, size: 3.2, count: 32 },
         filterStyle: 'drop-shadow(0 0 22px rgba(148, 163, 184, 0.75)) drop-shadow(0 15px 25px rgba(0,0,0,0.85))',
         battleCry: 'COMBATTI! NON IMPORTA IL DOLORE, CONTINUA A LOTTARE!',
         quote: '"Il dolore muscolare della palestra non è niente in confronto alla debolezza di arrendersi. Impugna la tua spada e lotta."',
@@ -2111,6 +2309,11 @@
         standeeCard.style.boxShadow = `0 10px 35px ${displayHero.auraRgba || 'rgba(0,240,255,0.25)'}`;
       }
 
+      // Dynamic Ki Particles
+      if (typeof ParticleEngine !== 'undefined' && ParticleEngine.setPreset) {
+        ParticleEngine.setPreset(displayHero.particles);
+      }
+
       // 2. Topbar Profile Box
       const topImg = document.getElementById('heroAvatarImg');
       if (topImg) topImg.src = displayHero.img;
@@ -2165,6 +2368,10 @@
         void fullImg.offsetWidth;
         fullImg.classList.add('power-surge');
         setTimeout(() => fullImg.classList.remove('power-surge'), 700);
+      }
+
+      if (typeof ParticleEngine !== 'undefined' && ParticleEngine.triggerBurst) {
+        ParticleEngine.triggerBurst(hero.themeColor);
       }
 
       try {
@@ -2668,6 +2875,7 @@
     }
 
     // --- INIT ---
+    if (typeof ParticleEngine !== 'undefined') ParticleEngine.init();
     updateHeroUI();
     selectWorkoutDay('venerdi');
     updateHydrationUI();
