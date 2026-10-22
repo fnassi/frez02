@@ -6,8 +6,10 @@ echo ========================================================
 echo.
 cd /d "%~dp0"
 
-echo [1/2] Invio delle modifiche al repository remoto...
-git push origin main --force
+echo [1/2] Preparazione e invio delle modifiche al repository remoto...
+git add .
+git commit -m "HealthQuest update" --allow-empty
+git push origin main
 
 echo.
 if %ERRORLEVEL% EQU 0 (
