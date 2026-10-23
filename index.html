@@ -740,52 +740,32 @@
 
     </section>
 
-    <!-- SEZIONE 1: QUEST LOG - SCHEDE PALESTRA & ESERCIZI -->
+        <!-- SEZIONE 1: QUEST LOG - SCHEDE PALESTRA & ESERCIZI -->
     <section id="sec-quest" class="hud-box bg-cyber-panel border border-purple-500/40 p-5 sm:p-6 shadow-2xl relative scroll-mt-28">
       
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5 border-b border-purple-500/30 pb-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-purple-500/30 pb-4">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded bg-purple-950 border border-purple-400 flex items-center justify-center text-xl">
+          <div class="w-10 h-10 rounded bg-purple-950 border border-purple-400 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(168,85,247,0.4)]">
             ⚔️
           </div>
           <div>
-            <div class="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold">MISSION SELECT</div>
+            <div class="text-[10px] font-mono text-purple-400 uppercase tracking-widest font-bold">MISSION SELECT & WORKOUT BUILDER</div>
             <h2 class="text-lg font-black text-white uppercase tracking-wider glow-purple">Schede Allenamento</h2>
           </div>
         </div>
-        <div class="flex items-center gap-2">
-          <span id="workoutDisciplineBadge" class="badge-cut px-3 py-1 bg-purple-950 text-purple-300 border border-purple-400 font-bold text-xs uppercase tracking-wider">
-            DOMANI: STAGE 4 (VENERDÌ)
-          </span>
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="openWorkoutBuilderModal(); soundFx.click();" class="badge-cut px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black text-[11px] font-mono uppercase tracking-wider shadow-lg shadow-purple-600/40 active:scale-95 transition flex items-center gap-1.5">
+            <span>➕ CREA NUOVA SCHEDA</span>
+          </button>
+          <button onclick="resetToDefaultWorkouts(); soundFx.click();" title="Ripristina schede standard (Lunedì-Venerdì)" class="px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] font-mono transition border border-slate-700">
+            🔄 RESET DEFAULT
+          </button>
         </div>
       </div>
 
-      <!-- Stage Selector Tabs -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5">
-        <button onclick="selectWorkoutDay('lunedi'); soundFx.click();" id="tab-lunedi" class="workout-tab p-3 rounded border text-center transition font-bold text-xs bg-cyber-dark border-slate-800 text-slate-400 hover:border-purple-500">
-          <div class="text-[9px] font-arcade text-slate-500">STAGE 1</div>
-          <div class="text-sm font-black text-white uppercase">Lunedì</div>
-          <div class="text-[10px] text-slate-400">Petto & Bicipiti</div>
-        </button>
-
-        <button onclick="selectWorkoutDay('martedi'); soundFx.click();" id="tab-martedi" class="workout-tab p-3 rounded border text-center transition font-bold text-xs bg-cyber-dark border-slate-800 text-slate-400 hover:border-purple-500">
-          <div class="text-[9px] font-arcade text-slate-500">STAGE 2</div>
-          <div class="text-sm font-black text-white uppercase">Martedì</div>
-          <div class="text-[10px] text-slate-400">Schiena & Tricipiti</div>
-        </button>
-
-        <button onclick="selectWorkoutDay('giovedi'); soundFx.click();" id="tab-giovedi" class="workout-tab p-3 rounded border text-center transition font-bold text-xs bg-cyber-dark border-slate-800 text-slate-400 hover:border-purple-500">
-          <div class="text-[9px] font-arcade text-slate-500">STAGE 3</div>
-          <div class="text-sm font-black text-white uppercase">Giovedì</div>
-          <div class="text-[10px] text-slate-400">Spalle & Petto rich.</div>
-        </button>
-
-        <button onclick="selectWorkoutDay('venerdi'); soundFx.click();" id="tab-venerdi" class="workout-tab p-3 rounded border text-center transition font-bold text-xs bg-purple-950 border-purple-400 text-purple-200 relative shadow-lg shadow-purple-900/50">
-          <span class="absolute -top-2.5 right-2 text-[8px] bg-red-600 text-white font-arcade px-2 py-0.5 rounded border border-white">NEXT BOSS</span>
-          <div class="text-[9px] font-arcade text-purple-400">STAGE 4</div>
-          <div class="text-sm font-black text-white uppercase">Venerdì</div>
-          <div class="text-[10px] text-purple-300">Gambe, Schiena, Braccia</div>
-        </button>
+      <!-- Stage Selector Tabs (Dynamic) -->
+      <div id="workoutTabsContainer" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-2 mb-5">
+        <!-- Generato dinamicamente via renderWorkoutTabs() -->
       </div>
 
       <!-- Rest Timer HUD -->
@@ -817,14 +797,22 @@
         </div>
       </div>
 
-      <!-- Current Day Exercises -->
-      <div class="flex items-center justify-between mb-3 px-1">
+      <!-- Current Day Exercises Header & Controls -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3 px-1 border-b border-slate-800/80 pb-2">
         <h3 id="currentDayTitle" class="text-sm font-black text-white uppercase tracking-wider flex items-center gap-2 font-mono">
-          <span>⚡</span> MISSION: VENERDÌ (GAMBE, SCHIENA, BRACCIA, SPALLE)
+          <span>⚡</span> MISSION: SCHEDA ATTIVA
         </h3>
-        <button onclick="resetDayChecks()" class="text-[10px] text-slate-500 hover:text-red-400 transition font-mono">
-          [RESET SPUNTE]
-        </button>
+        <div class="flex items-center gap-2 font-mono">
+          <button onclick="openWorkoutExerciseModal(); soundFx.click();" class="px-2.5 py-1 bg-purple-950 hover:bg-purple-800 text-purple-300 hover:text-white border border-purple-500/40 rounded text-[11px] font-bold transition flex items-center gap-1 active:scale-95 shadow">
+            <span>➕ AGGIUNGI ESERCIZIO</span>
+          </button>
+          <button onclick="deleteCurrentWorkoutDay(); soundFx.click();" class="px-2 py-1 bg-red-950/60 hover:bg-red-900 text-red-400 hover:text-red-200 border border-red-900/60 rounded text-[11px] transition" title="Elimina questo giorno">
+            🗑️ ELIMINA GIORNO
+          </button>
+          <button onclick="resetDayChecks()" class="text-[10px] text-slate-500 hover:text-red-400 transition ml-1">
+            [RESET SPUNTE]
+          </button>
+        </div>
       </div>
 
       <div id="workoutExercisesList" class="space-y-3 mb-5"></div>
@@ -1011,61 +999,101 @@
       </div>
     </section>
 
-    <!-- SEZIONE 4: RATIONS & INVENTORY - SPUNTINI & PIANO PASTI -->
+        <!-- SEZIONE 4: RATIONS & INVENTORY - SPUNTINI & DATABASE KCAL CIBI COMUNI -->
     <section id="sec-inventory" class="hud-box bg-cyber-panel border border-amber-500/40 p-5 sm:p-6 shadow-2xl relative scroll-mt-28">
-      <div class="flex items-center justify-between mb-4 border-b border-amber-500/30 pb-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-amber-500/30 pb-3">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded bg-amber-950 border border-amber-400 flex items-center justify-center text-xl">
+          <div class="w-10 h-10 rounded bg-amber-950 border border-amber-400 flex items-center justify-center text-xl shadow-[0_0_15px_rgba(245,158,11,0.35)]">
             🎒
           </div>
           <div>
-            <div class="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">RATIONS INVENTORY</div>
-            <h2 class="text-lg font-black text-white uppercase tracking-wider glow-gold">Spuntini & Fame Nervosa</h2>
+            <div class="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">RATIONS & NUTRITION ENGINE</div>
+            <h2 class="text-lg font-black text-white uppercase tracking-wider glow-gold">Spuntini & Kcal Cibi Comuni</h2>
           </div>
         </div>
-        <span id="mealSplitBadge" class="badge-cut text-xs text-amber-300 bg-amber-950/80 px-3 py-1 font-mono font-bold border border-amber-500/50 uppercase">
-          PIANO: 5 PASTI
-        </span>
-      </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5 font-mono">
-        <button onclick="logSnack('Frutta Fresca 🍎', 'Zuccheri sani e fibre'); soundFx.bite();" class="p-3 bg-cyber-dark hover:bg-amber-950/50 border border-slate-800 hover:border-amber-400 rounded-xl text-left transition active:scale-95 group">
-          <div class="text-2xl mb-1 group-hover:scale-110 transition">🍎</div>
-          <div class="text-xs font-black text-white uppercase">Frutta</div>
-          <div class="text-[9px] text-amber-400">+10 XP • Vitamine</div>
-        </button>
-
-        <button onclick="logSnack('Frutta Secca 🥜', 'Magnesio'); soundFx.bite();" class="p-3 bg-cyber-dark hover:bg-amber-950/50 border border-slate-800 hover:border-amber-400 rounded-xl text-left transition active:scale-95 group">
-          <div class="text-2xl mb-1 group-hover:scale-110 transition">🥜</div>
-          <div class="text-xs font-black text-white uppercase">Noci / Mandorle</div>
-          <div class="text-[9px] text-amber-400">+10 XP • Magnesio</div>
-        </button>
-
-        <button onclick="logSnack('Verdure Crude 🥕', 'Zero cal'); soundFx.bite();" class="p-3 bg-cyber-dark hover:bg-amber-950/50 border border-slate-800 hover:border-amber-400 rounded-xl text-left transition active:scale-95 group">
-          <div class="text-2xl mb-1 group-hover:scale-110 transition">🥕</div>
-          <div class="text-xs font-black text-white uppercase">Carote / Finocchi</div>
-          <div class="text-[9px] text-amber-400">+10 XP • Crunch</div>
-        </button>
-
-        <button onclick="logSnack('Yogurt Proteico 🥣', 'Proteine'); soundFx.bite();" class="p-3 bg-cyber-dark hover:bg-amber-950/50 border border-slate-800 hover:border-amber-400 rounded-xl text-left transition active:scale-95 group">
-          <div class="text-2xl mb-1 group-hover:scale-110 transition">🥣</div>
-          <div class="text-xs font-black text-white uppercase">Yogurt Proteico</div>
-          <div class="text-[9px] text-amber-400">+15 XP • Muscle</div>
-        </button>
-      </div>
-
-      <div class="bg-cyber-dark rounded-xl p-4 border border-slate-800 font-mono">
-        <div class="flex gap-2 mb-3">
-          <input type="text" id="customSnackInput" placeholder="Item personalizzato... (es. shaker, toast)" class="flex-1 bg-cyber-panel border border-slate-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400" />
-          <button onclick="addCustomSnack(); soundFx.bite();" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase rounded transition">
-            + USE ITEM
+        <div class="flex items-center gap-2">
+          <button onclick="openFoodEncyclopediaModal(); soundFx.click();" class="badge-cut px-3.5 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-black text-[11px] font-mono uppercase tracking-wider shadow-lg shadow-amber-500/30 active:scale-95 transition flex items-center gap-1.5">
+            <span>📖 ENCICLOPEDIA KCAL (50+ CIBI)</span>
           </button>
         </div>
-        <div class="flex items-center justify-between text-[10px] text-slate-500 mb-2">
-          <span>DAILY INVENTORY LOG:</span>
-          <button onclick="clearSnacksToday()" class="hover:text-red-400 transition">[CLEAR]</button>
+      </div>
+
+      <!-- Macro & Calorie HUD Bar -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 font-mono">
+        <div class="bg-cyber-dark border border-amber-500/40 rounded-xl p-3 text-center relative overflow-hidden">
+          <div class="text-[9px] uppercase text-amber-400 font-bold tracking-wider mb-0.5">🔥 KCAL OGGI</div>
+          <div class="text-xl font-arcade text-amber-300 font-black"><span id="todayKcalTotal">0</span> <span class="text-xs font-normal">kcal</span></div>
+          <div class="text-[9px] text-slate-400 mt-0.5">Target: ~2.200 kcal</div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+            <div id="todayKcalBar" class="bg-gradient-to-r from-amber-500 to-orange-500 h-full transition-all duration-500" style="width: 0%"></div>
+          </div>
         </div>
-        <div id="snacksList" class="space-y-1.5 max-h-32 overflow-y-auto text-xs"></div>
+
+        <div class="bg-cyber-dark border border-slate-800 rounded-xl p-3 text-center">
+          <div class="text-[9px] uppercase text-cyan-400 font-bold tracking-wider mb-0.5">🥩 PROTEINE</div>
+          <div class="text-xl font-arcade text-cyan-300 font-black"><span id="todayProteinTotal">0</span> <span class="text-xs font-normal">g</span></div>
+          <div class="text-[9px] text-slate-500 mt-0.5">Massa & Sintesi muscolare</div>
+        </div>
+
+        <div class="bg-cyber-dark border border-slate-800 rounded-xl p-3 text-center">
+          <div class="text-[9px] uppercase text-purple-400 font-bold tracking-wider mb-0.5">🍞 CARBOIDRATI</div>
+          <div class="text-xl font-arcade text-purple-300 font-black"><span id="todayCarbsTotal">0</span> <span class="text-xs font-normal">g</span></div>
+          <div class="text-[9px] text-slate-500 mt-0.5">Energia & Ricarica Glicogeno</div>
+        </div>
+
+        <div class="bg-cyber-dark border border-slate-800 rounded-xl p-3 text-center">
+          <div class="text-[9px] uppercase text-emerald-400 font-bold tracking-wider mb-0.5">🥑 GRASSI BUONI</div>
+          <div class="text-xl font-arcade text-emerald-300 font-black"><span id="todayFatTotal">0</span> <span class="text-xs font-normal">g</span></div>
+          <div class="text-[9px] text-slate-500 mt-0.5">Ormoni & Sistema Nervoso</div>
+        </div>
+      </div>
+
+      <!-- Live Search & Category Filter for Quick Foods -->
+      <div class="bg-cyber-dark/80 rounded-xl p-3 border border-slate-800 mb-4 font-mono space-y-2.5">
+        <div class="flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-2.5 text-xs text-amber-400">🔍</span>
+            <input type="text" id="foodSearchInput" oninput="filterQuickFoods()" placeholder="Cerca cibo o calorie (es. mela, yogurt greco, noci, bresaola, pollo, 150...)" class="w-full bg-cyber-panel border border-slate-700 rounded-lg pl-8 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition" />
+          </div>
+          <button onclick="clearFoodSearch()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition font-mono whitespace-nowrap">
+            RESET FILTRO
+          </button>
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] no-scrollbar" id="foodFilterChips">
+          <button onclick="setFoodCategory('all')" class="food-cat-btn px-2.5 py-1 rounded bg-amber-500 text-black font-black whitespace-nowrap" data-cat="all">TUTTI</button>
+          <button onclick="setFoodCategory('frutta')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="frutta">🍎 Frutta Fresca</button>
+          <button onclick="setFoodCategory('secca')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="secca">🥜 Frutta Secca & Magnesio</button>
+          <button onclick="setFoodCategory('proteine')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="proteine">🥣 Proteine & Latticini</button>
+          <button onclick="setFoodCategory('carbo')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="carbo">🌾 Carbo & Crunch</button>
+          <button onclick="setFoodCategory('ansia')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="ansia">🥕 Crunch Zero-Ansia</button>
+          <button onclick="setFoodCategory('sfizi')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="sfizi">🍫 Sfizi Fit & Relax</button>
+          <button onclick="setFoodCategory('pasti')" class="food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="pasti">🍽️ Pasti Rapidi</button>
+        </div>
+      </div>
+
+      <!-- Quick Foods Grid (Populated dynamically) -->
+      <div id="quickFoodsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 mb-5 font-mono max-h-96 overflow-y-auto pr-1">
+        <!-- Generato dinamicamente via renderQuickFoodsGrid() -->
+      </div>
+
+      <!-- Custom Food Quick-Add & Today Log -->
+      <div class="bg-cyber-dark rounded-xl p-4 border border-slate-800 font-mono">
+        <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-2">➕ AGGIUNGI CIBO PERSONALIZZATO</div>
+        <div class="flex flex-col sm:flex-row gap-2 mb-3">
+          <input type="text" id="customSnackInput" placeholder="Nome alimento (es. Toast integrale, shaker...)" class="flex-1 bg-cyber-panel border border-slate-700 rounded px-3 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400" />
+          <input type="number" id="customSnackKcal" placeholder="Kcal (es. 180)" class="w-24 sm:w-28 bg-cyber-panel border border-slate-700 rounded px-3 py-1.5 text-xs text-amber-300 font-bold focus:outline-none focus:border-amber-400" />
+          <button onclick="addCustomSnack(); soundFx.bite();" class="px-4 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-black text-xs uppercase rounded transition whitespace-nowrap active:scale-95 shadow">
+            + AGGIUNGI (+10 XP)
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between text-[10px] text-slate-500 mb-2 border-t border-slate-800/80 pt-2.5">
+          <span class="font-bold uppercase tracking-wider text-slate-400">REGISTRO SPUNTINI & RATION DI OGGI:</span>
+          <button onclick="clearSnacksToday()" class="hover:text-red-400 transition">[SVUOTA REGISTRO]</button>
+        </div>
+        <div id="snacksList" class="space-y-1.5 max-h-48 overflow-y-auto text-xs pr-1"></div>
       </div>
     </section>
 
@@ -2231,6 +2259,200 @@
     </div>
   </div>
 
+  <!-- MODAL: CREA NUOVA SCHEDA / GIORNO ALLENAMENTO -->
+  <div id="workoutBuilderModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+    <div class="hud-box bg-cyber-panel border border-purple-500/70 p-5 rounded-2xl w-full max-w-lg shadow-[0_0_35px_rgba(168,85,247,0.35)] relative animate-fade-in font-sans">
+      <div class="flex items-center justify-between border-b border-purple-500/30 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">⚔️</span>
+          <div>
+            <div class="text-[9px] font-mono text-purple-400 font-bold uppercase tracking-wider">WORKOUT ARCHITECT</div>
+            <h3 class="text-base font-black text-white uppercase tracking-wider glow-purple">Crea Nuova Scheda / Giorno</h3>
+          </div>
+        </div>
+        <button onclick="closeWorkoutBuilderModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1">✕</button>
+      </div>
+
+      <div class="space-y-3.5 mb-5 font-mono text-xs">
+        <div>
+          <label class="block text-[10px] text-purple-300 uppercase font-bold mb-1">Giorno / Nome Scheda (es. Mercoledì, Sabato, Push Day):</label>
+          <input type="text" id="newDayNameInput" placeholder="Es: Mercoledì oppure Push Day" class="w-full bg-cyber-dark border border-purple-500/40 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 font-sans text-xs" />
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-slate-300 uppercase font-bold mb-1">Focus Muscolare / Sottotitolo (es. Dorsali & Bicipiti):</label>
+          <input type="text" id="newDayTitleInput" placeholder="Es: Dorsali & Bicipiti, o Full Body" class="w-full bg-cyber-dark border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 font-sans text-xs" />
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-slate-300 uppercase font-bold mb-1">Template di Partenza (opzionale):</label>
+          <select id="newDayTemplateSelect" class="w-full bg-cyber-dark border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 font-sans text-xs">
+            <option value="empty">-- Inizia da zero (Vuota) --</option>
+            <option value="push">💪 Push (Petto, Spalle & Tricipiti)</option>
+            <option value="pull">⚡ Pull (Dorso, Bicipiti & Deltoidi post.)</option>
+            <option value="legs">🦵 Legs & Core (Gambe, Polpacci & Addome)</option>
+            <option value="fullbody">🔥 Full Body Express (Panca, Squat, Trazioni, Military)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex gap-2 font-mono">
+        <button onclick="createWorkoutDay()" class="badge-cut flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-black text-xs uppercase tracking-wider transition active:scale-95 shadow-lg shadow-purple-600/30">
+          💾 CREA SCHEDA (+30 XP)
+        </button>
+        <button onclick="closeWorkoutBuilderModal()" class="badge-cut px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs uppercase tracking-wider transition">
+          ANNULLA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AGGIUNGI ESERCIZIO A SCHEDA ATTIVA -->
+  <div id="workoutExerciseModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+    <div class="hud-box bg-cyber-panel border border-purple-500/70 p-5 rounded-2xl w-full max-w-lg shadow-[0_0_35px_rgba(168,85,247,0.35)] relative animate-fade-in font-sans">
+      <div class="flex items-center justify-between border-b border-purple-500/30 pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🏋️</span>
+          <div>
+            <div class="text-[9px] font-mono text-purple-400 font-bold uppercase tracking-wider">ADD EXERCISE</div>
+            <h3 class="text-base font-black text-white uppercase tracking-wider glow-purple">Aggiungi a: <span id="modalExDayName" class="text-purple-300">Giorno</span></h3>
+          </div>
+        </div>
+        <button onclick="closeWorkoutExerciseModal()" class="text-slate-400 hover:text-white text-lg font-bold p-1">✕</button>
+      </div>
+
+      <!-- Quick Pick Chips -->
+      <div class="mb-4">
+        <div class="text-[10px] font-mono text-slate-400 uppercase font-bold mb-1.5 flex items-center gap-1">
+          <span>⚡</span> PRESET RAPIDI (1-CLICK FILL):
+        </div>
+        <div class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto pr-1 text-[10px] font-mono">
+          <button type="button" onclick="quickPickExercise('Panca piana bilanciere', 4, '6-8', 'Petto')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Panca Piana (4x6-8)</button>
+          <button type="button" onclick="quickPickExercise('Panca inclinata manubri', 3, '8-10', 'Petto')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Panca Inc. Manubri (3x8-10)</button>
+          <button type="button" onclick="quickPickExercise('Croci ai cavi', 3, '12', 'Petto')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Croci Cavi (3x12)</button>
+          <button type="button" onclick="quickPickExercise('Trazioni alla sbarra', 4, 'max', 'Schiena / Dorso')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Trazioni (4xmax)</button>
+          <button type="button" onclick="quickPickExercise('Lat Machine presa larga', 4, '8-10', 'Schiena / Dorso')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Lat Machine (4x8-10)</button>
+          <button type="button" onclick="quickPickExercise('Pulley basso', 3, '10', 'Schiena / Dorso')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Pulley (3x10)</button>
+          <button type="button" onclick="quickPickExercise('Military Press bilanciere', 4, '6-8', 'Spalle')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Military Press (4x6-8)</button>
+          <button type="button" onclick="quickPickExercise('Alzate laterali manubri', 4, '12-15', 'Spalle')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Alzate Lat. (4x12-15)</button>
+          <button type="button" onclick="quickPickExercise('Squat con bilanciere', 4, '6-8', 'Gambe')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Squat (4x6-8)</button>
+          <button type="button" onclick="quickPickExercise('Leg Press 45°', 4, '10', 'Gambe')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Leg Press (4x10)</button>
+          <button type="button" onclick="quickPickExercise('Leg Curl femorali', 3, '12', 'Gambe')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Leg Curl (3x12)</button>
+          <button type="button" onclick="quickPickExercise('Curl bilanciere sagomato', 3, '8-10', 'Bicipiti')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Curl Bilanciere (3x8-10)</button>
+          <button type="button" onclick="quickPickExercise('Hammer curl con manubri', 3, '10', 'Bicipiti')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Hammer Curl (3x10)</button>
+          <button type="button" onclick="quickPickExercise('Pushdown cavo corda', 3, '12', 'Tricipiti')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Pushdown Corda (3x12)</button>
+          <button type="button" onclick="quickPickExercise('French press su panca', 3, '10', 'Tricipiti')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">French Press (3x10)</button>
+          <button type="button" onclick="quickPickExercise('Plank a terra', 3, '60s', 'Addome / Core')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Plank (3x60s)</button>
+          <button type="button" onclick="quickPickExercise('Leg raise alla sbarra', 3, '12', 'Addome / Core')" class="px-2 py-1 bg-cyber-dark hover:bg-purple-900 border border-slate-700 rounded text-slate-300 hover:text-white">Leg Raise (3x12)</button>
+        </div>
+      </div>
+
+      <div class="space-y-3 mb-5 font-mono text-xs">
+        <div>
+          <label class="block text-[10px] text-slate-300 uppercase font-bold mb-1">Gruppo Muscolare:</label>
+          <select id="newExGroupSelect" class="w-full bg-cyber-dark border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 font-sans text-xs">
+            <option value="Petto">Petto</option>
+            <option value="Schiena / Dorso">Schiena / Dorso</option>
+            <option value="Spalle">Spalle</option>
+            <option value="Bicipiti">Bicipiti</option>
+            <option value="Tricipiti">Tricipiti</option>
+            <option value="Gambe">Gambe</option>
+            <option value="Addome / Core">Addome / Core</option>
+            <option value="Cardio / Funzionale">Cardio / Funzionale</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-[10px] text-purple-300 uppercase font-bold mb-1">Nome Esercizio:</label>
+          <input type="text" id="newExNameInput" placeholder="Es: Panca inclinata con manubri" class="w-full bg-cyber-dark border border-purple-500/40 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 font-sans text-xs" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] text-slate-300 uppercase font-bold mb-1">Numero Serie (Sets):</label>
+            <input type="number" id="newExSetsInput" min="1" max="10" value="3" class="w-full bg-cyber-dark border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 text-xs font-mono font-bold" />
+          </div>
+          <div>
+            <label class="block text-[10px] text-slate-300 uppercase font-bold mb-1">Ripetizioni (Reps):</label>
+            <input type="text" id="newExRepsInput" value="10" placeholder="Es: 8-10 oppure 12 o max" class="w-full bg-cyber-dark border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-purple-400 text-xs font-mono font-bold" />
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-2 font-mono">
+        <button onclick="saveNewExerciseToDay()" class="badge-cut flex-1 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs uppercase tracking-wider transition active:scale-95 shadow-lg shadow-purple-600/30">
+          ➕ AGGIUNGI ALLA SCHEDA (+10 XP)
+        </button>
+        <button onclick="closeWorkoutExerciseModal()" class="badge-cut px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white text-xs uppercase tracking-wider transition">
+          ANNULLA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ENCICLOPEDIA COMPLETA ALIMENTI & KCAL (50+ CIBI) -->
+  <div id="foodEncyclopediaModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+    <div class="hud-box bg-cyber-panel border border-amber-500/70 p-4 sm:p-6 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-[0_0_40px_rgba(245,158,11,0.35)] relative animate-fade-in font-sans">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-amber-500/30 pb-3 mb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-950 border border-amber-400 flex items-center justify-center text-2xl shadow">
+            📖
+          </div>
+          <div>
+            <div class="text-[9px] font-mono text-amber-400 font-bold uppercase tracking-widest">NUTRITION COMPENDIUM</div>
+            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wider glow-gold">Enciclopedia Calorie & Spuntini (50+ Cibi)</h3>
+          </div>
+        </div>
+        <button onclick="closeFoodEncyclopediaModal()" class="text-slate-400 hover:text-white text-xl font-bold p-1">✕</button>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="space-y-2 mb-3 font-mono">
+        <div class="flex flex-col sm:flex-row gap-2">
+          <div class="relative flex-1">
+            <span class="absolute left-3 top-2.5 text-xs text-amber-400">🔍</span>
+            <input type="text" id="encyclopediaSearchInput" oninput="filterEncyclopedia()" placeholder="Filtra per nome alimento, kcal o proprietà..." class="w-full bg-cyber-dark border border-slate-700 rounded-lg pl-8 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400" />
+          </div>
+          <div class="flex items-center gap-1.5">
+            <select id="encyclopediaSortSelect" onchange="filterEncyclopedia()" class="bg-cyber-dark border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus:border-amber-400 font-mono">
+              <option value="name">Ordina: Nome A-Z</option>
+              <option value="kcal_asc">Ordina: Meno Calorie</option>
+              <option value="kcal_desc">Ordina: Più Calorie</option>
+              <option value="protein_desc">Ordina: Più Proteine</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Category pills inside encyclopedia -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px]" id="encyclopediaCatPills">
+          <button onclick="setEncyclopediaCategory('all')" class="enc-cat-btn px-2.5 py-1 rounded bg-amber-500 text-black font-black whitespace-nowrap" data-cat="all">TUTTI (50)</button>
+          <button onclick="setEncyclopediaCategory('frutta')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="frutta">🍎 Frutta</button>
+          <button onclick="setEncyclopediaCategory('secca')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="secca">🥜 Frutta Secca</button>
+          <button onclick="setEncyclopediaCategory('proteine')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="proteine">🥣 Proteine</button>
+          <button onclick="setEncyclopediaCategory('carbo')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="carbo">🌾 Carbo</button>
+          <button onclick="setEncyclopediaCategory('ansia')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="ansia">🥕 Anti-Ansia Fumo</button>
+          <button onclick="setEncyclopediaCategory('sfizi')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="sfizi">🍫 Sfizi Fit</button>
+          <button onclick="setEncyclopediaCategory('pasti')" class="enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap" data-cat="pasti">🍽️ Pasti</button>
+        </div>
+      </div>
+
+      <!-- Scrollable Food List -->
+      <div id="encyclopediaFoodsList" class="flex-1 overflow-y-auto pr-1 space-y-2 font-mono text-xs">
+        <!-- Generato dinamicamente via renderEncyclopedia() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="border-t border-slate-800 pt-3 mt-3 flex justify-between items-center text-[10px] font-mono text-slate-400">
+        <div>💡 <em>Tutte le calorie e i macronutrienti si riferiscono alla porzione standard indicata e a 100g.</em></div>
+        <button onclick="closeFoodEncyclopediaModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded font-bold uppercase transition">
+          CHIUDI
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // --- KI & COMBAT PARTICLE ENGINE ---
     const ParticleEngine = {
@@ -2797,9 +3019,10 @@
       }
     };
 
-    // --- WORKOUT DATABASE ---
-    const WORKOUT_DATA = {
+        // --- WORKOUT DATABASE ---
+    const DEFAULT_WORKOUT_DATA = {
       lunedi: {
+        shortName: "Lunedì",
         title: "LUNEDÌ: PETTO & BICIPITI",
         groups: [
           {
@@ -2821,6 +3044,7 @@
         ]
       },
       martedi: {
+        shortName: "Martedì",
         title: "MARTEDÌ: SCHIENA & TRICIPITI",
         groups: [
           {
@@ -2842,6 +3066,7 @@
         ]
       },
       giovedi: {
+        shortName: "Giovedì",
         title: "GIOVEDÌ: SPALLE & PETTO (RICHIAMO)",
         groups: [
           {
@@ -2863,6 +3088,7 @@
         ]
       },
       venerdi: {
+        shortName: "Venerdì",
         title: "VENERDÌ: GAMBE, SCHIENA, BRACCIA, SPALLE",
         groups: [
           {
@@ -2899,6 +3125,13 @@
         ]
       }
     };
+
+    let WORKOUT_DATA = JSON.parse(localStorage.getItem('respira_custom_workouts')) || JSON.parse(JSON.stringify(DEFAULT_WORKOUT_DATA));
+
+    function saveWorkouts() {
+      localStorage.setItem('respira_custom_workouts', JSON.stringify(WORKOUT_DATA));
+    }
+
 
     function getExactQuitTime() {
       const d = new Date();
@@ -3427,64 +3660,127 @@
       triggerHeroCheer();
     }
 
-    // --- SCHEDE ESERCIZI ---
+        // --- SCHEDE ESERCIZI DINAMICHE & WORKOUT BUILDER ---
     let currentSelectedDay = 'venerdi';
     let workoutProgress = JSON.parse(localStorage.getItem('respira_workout_checks')) || {};
     let exerciseWeights = JSON.parse(localStorage.getItem('respira_exercise_weights')) || {};
 
-    function selectWorkoutDay(dayKey) {
-      currentSelectedDay = dayKey;
-      ['lunedi', 'martedi', 'giovedi', 'venerdi'].forEach(d => {
-        const btn = document.getElementById('tab-' + d);
-        if (d === dayKey) {
-          btn.className = "workout-tab p-3 rounded border text-center transition font-bold text-xs bg-purple-950 border-purple-400 text-purple-200 relative shadow-lg shadow-purple-900/50";
-        } else {
-          btn.className = "workout-tab p-3 rounded border text-center transition font-bold text-xs bg-cyber-dark border-slate-800 text-slate-400 hover:border-purple-500";
-        }
+    function renderWorkoutTabs() {
+      const container = document.getElementById('workoutTabsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const dayKeys = Object.keys(WORKOUT_DATA);
+      if (dayKeys.length === 0) {
+        WORKOUT_DATA = JSON.parse(JSON.stringify(DEFAULT_WORKOUT_DATA));
+        saveWorkouts();
+      }
+
+      if (!WORKOUT_DATA[currentSelectedDay]) {
+        currentSelectedDay = Object.keys(WORKOUT_DATA)[0] || 'venerdi';
+      }
+
+      Object.keys(WORKOUT_DATA).forEach((dKey, idx) => {
+        const dData = WORKOUT_DATA[dKey];
+        const isActive = dKey === currentSelectedDay;
+        const btn = document.createElement('button');
+        btn.id = 'tab-' + dKey;
+        btn.onclick = () => { selectWorkoutDay(dKey); soundFx.click(); };
+        btn.className = isActive
+          ? "workout-tab p-3 rounded-xl border text-center transition font-bold text-xs bg-purple-950 border-purple-400 text-purple-200 relative shadow-lg shadow-purple-900/50"
+          : "workout-tab p-3 rounded-xl border text-center transition font-bold text-xs bg-cyber-dark border-slate-800 text-slate-400 hover:border-purple-500";
+
+        const groupsText = dData.groups && dData.groups.length > 0
+          ? dData.groups.map(g => g.name).join(', ')
+          : 'Custom Session';
+
+        btn.innerHTML = `
+          <div class="text-[9px] font-arcade ${isActive ? 'text-purple-300' : 'text-slate-500'}">STAGE ${idx + 1}</div>
+          <div class="text-sm font-black text-white uppercase truncate">${dData.shortName || dKey.toUpperCase()}</div>
+          <div class="text-[10px] text-slate-400 truncate max-w-[130px] mx-auto">${groupsText}</div>
+        `;
+        container.appendChild(btn);
       });
+    }
+
+    function selectWorkoutDay(dayKey) {
+      if (!WORKOUT_DATA[dayKey]) return;
+      currentSelectedDay = dayKey;
+      renderWorkoutTabs();
       renderWorkoutExercises();
     }
 
     function renderWorkoutExercises() {
       const data = WORKOUT_DATA[currentSelectedDay];
-      document.getElementById('currentDayTitle').innerHTML = `<span>⚡</span> MISSION: ${data.title}`;
+      if (!data) return;
+      
+      const titleEl = document.getElementById('currentDayTitle');
+      if (titleEl) {
+        titleEl.innerHTML = `<span>⚡</span> MISSION: ${data.title || data.shortName || currentSelectedDay.toUpperCase()}`;
+      }
+      
       const container = document.getElementById('workoutExercisesList');
+      if (!container) return;
       container.innerHTML = '';
 
-      data.groups.forEach(group => {
+      if (!data.groups || data.groups.length === 0 || data.groups.every(g => !g.exercises || g.exercises.length === 0)) {
+        container.innerHTML = `
+          <div class="p-6 bg-cyber-dark border border-dashed border-purple-500/30 rounded-xl text-center font-mono">
+            <div class="text-3xl mb-2">🏋️</div>
+            <div class="text-sm text-slate-300 font-bold mb-1">Nessun esercizio inserito in questa scheda!</div>
+            <div class="text-xs text-slate-500 mb-4">Usa il pulsante qui sotto per aggiungere il tuo primo esercizio o serie.</div>
+            <button onclick="openWorkoutExerciseModal(); soundFx.click();" class="badge-cut px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs uppercase transition shadow">
+              ➕ AGGIUNGI IL PRIMO ESERCIZIO
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      data.groups.forEach((group, gIdx) => {
+        if (!group.exercises || group.exercises.length === 0) return;
         const groupEl = document.createElement('div');
         groupEl.className = 'space-y-2';
 
         const groupHeader = document.createElement('div');
-        groupHeader.className = 'text-[11px] font-black font-arcade text-purple-400 uppercase tracking-widest pt-2 flex items-center gap-2';
-        groupHeader.innerHTML = `<span>▶</span> ${group.name.toUpperCase()}`;
+        groupHeader.className = 'text-[11px] font-black font-arcade text-purple-400 uppercase tracking-widest pt-2 flex items-center justify-between';
+        groupHeader.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span>▶</span> ${group.name.toUpperCase()}
+          </div>
+          <span class="text-[9px] text-slate-500 font-mono font-normal">(${group.exercises.length} esercizi)</span>
+        `;
         groupEl.appendChild(groupHeader);
 
-        group.exercises.forEach(ex => {
+        group.exercises.forEach((ex, exIdx) => {
           const card = document.createElement('div');
-          card.className = 'bg-cyber-dark border border-slate-800/90 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono';
+          card.className = 'bg-cyber-dark border border-slate-800/90 rounded-xl p-3 sm:p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono hover:border-purple-500/30 transition';
           const currentWeight = exerciseWeights[ex.id] || '';
 
           let setCheckboxes = '';
-          for (let s = 1; s <= ex.sets; s++) {
+          const numSets = parseInt(ex.sets) || 3;
+          for (let s = 1; s <= numSets; s++) {
             const checkKey = `${currentSelectedDay}_${ex.id}_set_${s}`;
             const isChecked = workoutProgress[checkKey] ? 'checked' : '';
             setCheckboxes += `
-              <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer bg-cyber-panel px-2.5 py-1.5 rounded border border-slate-800 hover:border-purple-400 transition">
+              <label class="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer bg-cyber-panel px-2.5 py-1.5 rounded border border-slate-800 hover:border-purple-400 transition select-none">
                 <input type="checkbox" onchange="toggleSetCheck('${checkKey}')" ${isChecked} class="accent-purple-500 rounded cursor-pointer w-4 h-4" />
-                <span class="text-[10px] font-arcade">S${s}</span>
+                <span class="text-[10px] font-arcade font-bold">S${s}</span>
               </label>
             `;
           }
 
           card.innerHTML = `
             <div class="flex-1">
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-white uppercase">${ex.name}</span>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-bold text-white uppercase tracking-wide">${ex.name}</span>
                 <span class="badge-cut text-[9px] px-2 py-0.5 bg-purple-950 text-purple-300 font-arcade border border-purple-500/40">${ex.sets}x${ex.reps}</span>
+                <button onclick="deleteExercise('${currentSelectedDay}', ${gIdx}, ${exIdx}); soundFx.click();" title="Elimina esercizio da questa scheda" class="text-slate-600 hover:text-red-400 text-xs transition p-1">
+                  🗑️
+                </button>
               </div>
               <div class="flex items-center gap-2 mt-2">
-                <span class="text-[9px] text-slate-500 uppercase">LOAD:</span>
+                <span class="text-[9px] text-slate-500 uppercase font-mono">CARICO / LOAD:</span>
                 <input type="text" placeholder="-- kg" value="${currentWeight}" onchange="saveExWeight('${ex.id}', this.value)" class="w-20 bg-cyber-panel border border-slate-700 rounded px-2 py-0.5 text-[11px] text-cyan-300 font-bold focus:outline-none focus:border-purple-400" />
               </div>
             </div>
@@ -3496,6 +3792,248 @@
         });
         container.appendChild(groupEl);
       });
+    }
+
+    function deleteExercise(dayKey, groupIdx, exIdx) {
+      if (!WORKOUT_DATA[dayKey] || !WORKOUT_DATA[dayKey].groups[groupIdx]) return;
+      const ex = WORKOUT_DATA[dayKey].groups[groupIdx].exercises[exIdx];
+      if (!confirm(`Rimuovere "${ex.name}" da questa scheda?`)) return;
+
+      WORKOUT_DATA[dayKey].groups[groupIdx].exercises.splice(exIdx, 1);
+      if (WORKOUT_DATA[dayKey].groups[groupIdx].exercises.length === 0) {
+        WORKOUT_DATA[dayKey].groups.splice(groupIdx, 1);
+      }
+      saveWorkouts();
+      renderWorkoutExercises();
+      renderWorkoutTabs();
+      soundFx.click();
+    }
+
+    function deleteCurrentWorkoutDay() {
+      const dayKeys = Object.keys(WORKOUT_DATA);
+      if (dayKeys.length <= 1) {
+        alert("Non puoi eliminare l'unica scheda rimasta! Puoi però modificarne gli esercizi.");
+        return;
+      }
+      const dayTitle = WORKOUT_DATA[currentSelectedDay].title || WORKOUT_DATA[currentSelectedDay].shortName;
+      if (!confirm(`Sei sicuro di voler eliminare completamente la scheda/giorno:\n"${dayTitle}"?`)) return;
+
+      delete WORKOUT_DATA[currentSelectedDay];
+      saveWorkouts();
+      currentSelectedDay = Object.keys(WORKOUT_DATA)[0];
+      renderWorkoutTabs();
+      renderWorkoutExercises();
+      soundFx.click();
+    }
+
+    function resetToDefaultWorkouts() {
+      if (!confirm("Ripristinare le 4 schede standard di allenamento (Lunedì, Martedì, Giovedì, Venerdì)?\nI tuoi progressi serie verranno preservati.")) return;
+      WORKOUT_DATA = JSON.parse(JSON.stringify(DEFAULT_WORKOUT_DATA));
+      saveWorkouts();
+      currentSelectedDay = 'venerdi';
+      renderWorkoutTabs();
+      renderWorkoutExercises();
+      soundFx.levelUp();
+    }
+
+    // Modal Workout Builder handlers
+    function openWorkoutBuilderModal() {
+      const modal = document.getElementById('workoutBuilderModal');
+      if (!modal) return;
+      document.getElementById('newDayNameInput').value = '';
+      document.getElementById('newDayTitleInput').value = '';
+      document.getElementById('newDayTemplateSelect').value = 'empty';
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeWorkoutBuilderModal() {
+      const modal = document.getElementById('workoutBuilderModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function createWorkoutDay() {
+      const nameInput = document.getElementById('newDayNameInput').value.trim();
+      const titleInput = document.getElementById('newDayTitleInput').value.trim();
+      const template = document.getElementById('newDayTemplateSelect').value;
+
+      if (!nameInput) {
+        alert("Inserisci un nome per la scheda / giorno (es. Mercoledì, Push Day, ecc.)!");
+        return;
+      }
+
+      const dayKey = 'custom_' + Date.now();
+      let groups = [];
+
+      if (template === 'push') {
+        groups = [
+          {
+            name: "Petto",
+            exercises: [
+              { id: dayKey + '_p1', name: "Panca piana bilanciere", sets: 4, reps: "6-8" },
+              { id: dayKey + '_p2', name: "Panca inclinata manubri", sets: 3, reps: "8-10" },
+              { id: dayKey + '_p3', name: "Croci ai cavi", sets: 3, reps: "12" }
+            ]
+          },
+          {
+            name: "Spalle",
+            exercises: [
+              { id: dayKey + '_sp1', name: "Military Press bilanciere", sets: 4, reps: "6-8" },
+              { id: dayKey + '_sp2', name: "Alzate laterali manubri", sets: 4, reps: "12-15" }
+            ]
+          },
+          {
+            name: "Tricipiti",
+            exercises: [
+              { id: dayKey + '_t1', name: "Pushdown corda", sets: 3, reps: "10-12" },
+              { id: dayKey + '_t2', name: "French press su panca", sets: 3, reps: "10" }
+            ]
+          }
+        ];
+      } else if (template === 'pull') {
+        groups = [
+          {
+            name: "Dorso & Schiena",
+            exercises: [
+              { id: dayKey + '_d1', name: "Trazioni alla sbarra", sets: 4, reps: "max" },
+              { id: dayKey + '_d2', name: "Lat Machine avanti", sets: 4, reps: "8-10" },
+              { id: dayKey + '_d3', name: "Pulley basso", sets: 3, reps: "10" },
+              { id: dayKey + '_d4', name: "Alzate posteriori", sets: 3, reps: "12-15" }
+            ]
+          },
+          {
+            name: "Bicipiti",
+            exercises: [
+              { id: dayKey + '_b1', name: "Curl bilanciere sagomato", sets: 3, reps: "8-10" },
+              { id: dayKey + '_b2', name: "Hammer curl manubri", sets: 3, reps: "10" }
+            ]
+          }
+        ];
+      } else if (template === 'legs') {
+        groups = [
+          {
+            name: "Gambe & Polpacci",
+            exercises: [
+              { id: dayKey + '_g1', name: "Squat con bilanciere", sets: 4, reps: "6-8" },
+              { id: dayKey + '_g2', name: "Leg Press 45°", sets: 4, reps: "10" },
+              { id: dayKey + '_g3', name: "Leg Curl", sets: 3, reps: "12" },
+              { id: dayKey + '_g4', name: "Leg Extension", sets: 3, reps: "12" },
+              { id: dayKey + '_g5', name: "Calf machine in piedi", sets: 4, reps: "15" }
+            ]
+          },
+          {
+            name: "Addome / Core",
+            exercises: [
+              { id: dayKey + '_a1', name: "Plank a terra", sets: 3, reps: "60s" },
+              { id: dayKey + '_a2', name: "Leg raise alla sbarra", sets: 3, reps: "12" }
+            ]
+          }
+        ];
+      } else if (template === 'fullbody') {
+        groups = [
+          {
+            name: "Full Body Compound",
+            exercises: [
+              { id: dayKey + '_fb1', name: "Squat con bilanciere", sets: 4, reps: "8" },
+              { id: dayKey + '_fb2', name: "Panca piana bilanciere", sets: 4, reps: "8" },
+              { id: dayKey + '_fb3', name: "Lat Machine o Trazioni", sets: 4, reps: "8" },
+              { id: dayKey + '_fb4', name: "Military Press", sets: 3, reps: "10" },
+              { id: dayKey + '_fb5', name: "Plank a terra", sets: 3, reps: "60s" }
+            ]
+          }
+        ];
+      } else {
+        groups = [
+          {
+            name: "Esercizi Principali",
+            exercises: []
+          }
+        ];
+      }
+
+      WORKOUT_DATA[dayKey] = {
+        shortName: nameInput,
+        title: `${nameInput.toUpperCase()}: ${titleInput || 'ALLENAMENTO PERSONALIZZATO'}`,
+        groups: groups
+      };
+
+      saveWorkouts();
+      currentSelectedDay = dayKey;
+      closeWorkoutBuilderModal();
+      renderWorkoutTabs();
+      renderWorkoutExercises();
+      soundFx.levelUp();
+      addHeroXp(30, 'Nuova scheda');
+      alert(`Scheda "${nameInput}" creata!`);
+    }
+
+    // Modal Exercise handlers
+    function openWorkoutExerciseModal() {
+      const modal = document.getElementById('workoutExerciseModal');
+      if (!modal) return;
+      const dData = WORKOUT_DATA[currentSelectedDay];
+      const nameSpan = document.getElementById('modalExDayName');
+      if (nameSpan && dData) nameSpan.textContent = dData.shortName || currentSelectedDay.toUpperCase();
+      
+      document.getElementById('newExNameInput').value = '';
+      document.getElementById('newExSetsInput').value = '3';
+      document.getElementById('newExRepsInput').value = '10';
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeWorkoutExerciseModal() {
+      const modal = document.getElementById('workoutExerciseModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function quickPickExercise(name, sets, reps, group) {
+      document.getElementById('newExNameInput').value = name;
+      document.getElementById('newExSetsInput').value = sets;
+      document.getElementById('newExRepsInput').value = reps;
+      document.getElementById('newExGroupSelect').value = group;
+      soundFx.click();
+    }
+
+    function saveNewExerciseToDay() {
+      const name = document.getElementById('newExNameInput').value.trim();
+      const sets = parseInt(document.getElementById('newExSetsInput').value) || 3;
+      const reps = document.getElementById('newExRepsInput').value.trim() || '10';
+      const groupName = document.getElementById('newExGroupSelect').value.trim() || 'Generale';
+
+      if (!name) {
+        alert("Inserisci il nome dell'esercizio!");
+        return;
+      }
+
+      const dData = WORKOUT_DATA[currentSelectedDay];
+      if (!dData) return;
+
+      if (!dData.groups) dData.groups = [];
+      let group = dData.groups.find(g => g.name.toLowerCase() === groupName.toLowerCase());
+      if (!group) {
+        group = { name: groupName, exercises: [] };
+        dData.groups.push(group);
+      }
+
+      const exId = 'ex_' + Date.now();
+      group.exercises.push({
+        id: exId,
+        name: name,
+        sets: sets,
+        reps: reps
+      });
+
+      saveWorkouts();
+      closeWorkoutExerciseModal();
+      renderWorkoutExercises();
+      renderWorkoutTabs();
+      soundFx.strike();
+      addHeroXp(10, 'Esercizio aggiunto');
     }
 
     function toggleSetCheck(key) {
@@ -3569,6 +4107,7 @@
       alert(`QUEST COMPLETED! +150 XP! Settimana: ${config.gymWorkoutsThisWeek} allenamenti.`);
     }
 
+
     // --- IDRATAZIONE ---
     const todayKey = 'respira_water_' + new Date().toISOString().slice(0, 10);
     let waterLog = JSON.parse(localStorage.getItem(todayKey)) || { total: 0, history: [] };
@@ -3626,55 +4165,355 @@
       }
     }
 
-    // --- SPUNTINI SANI ---
+        // --- DATABASE KCAL CIBI COMUNI & SPUNTINI SANI ---
+    const COMMON_FOODS_DB = [
+      // 🍎 FRUTTA FRESCA
+      { id: 'mela', name: 'Mela Fresca', icon: '🍎', category: 'frutta', portion: '1 frutto (~180g)', kcal: 78, kcal100g: 52, protein: 0.5, carbs: 19.0, fats: 0.3, benefit: 'Fibre sazianti, placa la voglia orale di fumare' },
+      { id: 'banana', name: 'Banana', icon: '🍌', category: 'frutta', portion: '1 frutto (~120g)', kcal: 105, kcal100g: 89, protein: 1.3, carbs: 27.0, fats: 0.3, benefit: 'Potassio e carboidrati ottimi pre-workout' },
+      { id: 'arancia', name: 'Arancia', icon: '🍊', category: 'frutta', portion: '1 frutto (~150g)', kcal: 62, kcal100g: 47, protein: 1.2, carbs: 15.0, fats: 0.2, benefit: 'Vitamina C per rigenerare polmoni e collagene' },
+      { id: 'mirtilli', name: 'Mirtilli Neri', icon: '🫐', category: 'frutta', portion: '1 vaschetta (~125g)', kcal: 71, kcal100g: 57, protein: 0.9, carbs: 17.0, fats: 0.4, benefit: 'Polifenoli e massimi antiossidanti protettivi' },
+      { id: 'kiwi', name: 'Kiwi', icon: '🥝', category: 'frutta', portion: '1 frutto (~85g)', kcal: 49, kcal100g: 61, protein: 0.9, carbs: 11.0, fats: 0.4, benefit: 'Enzimi digestivi, idratazione e vitamina C' },
+      { id: 'fragole', name: 'Fragole Fresche', icon: '🍓', category: 'frutta', portion: '1 ciotola (~150g)', kcal: 48, kcal100g: 32, protein: 1.0, carbs: 11.0, fats: 0.5, benefit: 'Dolcezza naturale a bassissimo indice glicemico' },
+      { id: 'pera', name: 'Pera Williams', icon: '🍐', category: 'frutta', portion: '1 frutto (~160g)', kcal: 91, kcal100g: 57, protein: 0.6, carbs: 23.0, fats: 0.2, benefit: 'Fibre solubili e prolungato senso di sazietà' },
+      { id: 'ananas', name: 'Ananas a Fette', icon: '🍍', category: 'frutta', portion: '2 fette (~150g)', kcal: 75, kcal100g: 50, protein: 0.8, carbs: 19.0, fats: 0.2, benefit: 'Bromelina drenante e antinfiammatoria' },
+      { id: 'uva', name: 'Uva Bianca/Nera', icon: '🍇', category: 'frutta', portion: '1 grappolo (~120g)', kcal: 83, kcal100g: 69, protein: 0.8, carbs: 21.0, fats: 0.2, benefit: 'Resveratrolo e ricarica di glicogeno muscolare' },
+      { id: 'pesca', name: 'Pesca / Nettarina', icon: '🍑', category: 'frutta', portion: '1 frutto (~150g)', kcal: 58, kcal100g: 39, protein: 1.4, carbs: 14.0, fats: 0.4, benefit: 'Rinfrescante, caroteni e potassio' },
+
+      // 🥜 FRUTTA SECCA & MAGNESIO
+      { id: 'mandorle', name: 'Mandorle Sgusciate', icon: '🥜', category: 'secca', portion: '1 manciata (~30g)', kcal: 175, kcal100g: 579, protein: 6.3, carbs: 6.5, fats: 15.0, benefit: 'Magnesio essenziale: distende i nervi e calma l\'astinenza' },
+      { id: 'noci', name: 'Noci Sgusciate', icon: '🌰', category: 'secca', portion: '5 noci (~30g)', kcal: 196, kcal100g: 654, protein: 4.5, carbs: 4.1, fats: 19.5, benefit: 'Omega-3 ALA per la concentrazione cerebrale' },
+      { id: 'burro_arachidi', name: 'Burro di Arachidi 100%', icon: '🥜', category: 'secca', portion: '1 cucchiaio colmo (~20g)', kcal: 118, kcal100g: 588, protein: 5.2, carbs: 4.0, fats: 10.0, benefit: 'Grassi sani e proteine, sazietà per ore' },
+      { id: 'anacardi', name: 'Anacardi Tostati', icon: '🌰', category: 'secca', portion: '1 manciata (~30g)', kcal: 166, kcal100g: 553, protein: 5.5, carbs: 9.0, fats: 13.1, benefit: 'Triptofano naturale, precursore della serotonina' },
+      { id: 'nocciole', name: 'Nocciole Piemonte', icon: '🌰', category: 'secca', portion: '1 manciata (~30g)', kcal: 188, kcal100g: 628, protein: 4.5, carbs: 5.0, fats: 18.2, benefit: 'Vitamina E ad azione protettiva per le arterie' },
+      { id: 'semi_zucca', name: 'Semi di Zucca', icon: '🎃', category: 'secca', portion: '1 porzione (~25g)', kcal: 140, kcal100g: 559, protein: 7.5, carbs: 3.5, fats: 12.0, benefit: 'Zinco e magnesio per la rigenerazione muscolare' },
+      { id: 'pistacchi', name: 'Pistacchi Tostati', icon: '🥜', category: 'secca', portion: '1 manciata (~30g)', kcal: 168, kcal100g: 562, protein: 6.0, carbs: 8.0, fats: 13.5, benefit: 'Sgusciarli impegna le mani distraendo dalla sigaretta' },
+
+      // 🥣 PROTEINE & LATTICINI
+      { id: 'yogurt_greco', name: 'Yogurt Greco 0%', icon: '🥣', category: 'proteine', portion: '1 vasetto (150g)', kcal: 85, kcal100g: 57, protein: 15.5, carbs: 5.5, fats: 0.0, benefit: '15.5g di proteine pure a zero grassi, sazia a lungo' },
+      { id: 'fiocchi_latte', name: 'Fiocchi di Latte magri', icon: '🧀', category: 'proteine', portion: '1 vasetto (150g)', kcal: 130, kcal100g: 86, protein: 18.0, carbs: 4.5, fats: 4.5, benefit: 'Caseine a rilascio lento, perfetto pre-nanna' },
+      { id: 'whey_protein', name: 'Proteine Whey Shaker', icon: '🥛', category: 'proteine', portion: '1 misurino in acqua (~30g)', kcal: 118, kcal100g: 393, protein: 24.5, carbs: 1.8, fats: 1.2, benefit: '24.5g di proteine a rapido assorbimento muscolare' },
+      { id: 'uovo_sodo', name: 'Uovo Intero Sodo', icon: '🥚', category: 'proteine', portion: '1 uovo medio (~50g)', kcal: 74, kcal100g: 148, protein: 6.3, carbs: 0.4, fats: 5.0, benefit: 'Valore biologico massimo e colina per i neurotrasmettitori' },
+      { id: 'albume', name: 'Albume d\'Uovo', icon: '🥚', category: 'proteine', portion: '1 porzione (~150g)', kcal: 78, kcal100g: 52, protein: 16.5, carbs: 1.1, fats: 0.3, benefit: 'Zero colesterolo, 16.5g proteine magrissime' },
+      { id: 'bresaola', name: 'Bresaola della Valtellina', icon: '🥓', category: 'proteine', portion: '1 porzione (~60g)', kcal: 91, kcal100g: 151, protein: 19.8, carbs: 0.2, fats: 1.5, benefit: 'Ferro, vitamina B12 e quasi 20g di proteine' },
+      { id: 'fesa_tacchino', name: 'Fesa di Tacchino Arrosto', icon: '🍗', category: 'proteine', portion: '1 porzione (~60g)', kcal: 66, kcal100g: 110, protein: 13.2, carbs: 1.2, fats: 1.0, benefit: 'Spuntino magro e pratico pronto al consumo' },
+      { id: 'tonno_naturale', name: 'Tonno al Naturale', icon: '🐟', category: 'proteine', portion: '1 scatola sgocciolata (~80g)', kcal: 82, kcal100g: 103, protein: 19.2, carbs: 0.0, fats: 0.7, benefit: 'Proteine nobili senza grassi aggiunti' },
+      { id: 'parmigiano', name: 'Parmigiano Reggiano 24m', icon: '🧀', category: 'proteine', portion: '1 tocchetto (~30g)', kcal: 120, kcal100g: 392, protein: 10.0, carbs: 0.0, fats: 8.5, benefit: 'Calcio biodisponibile ed energia concentrata' },
+      { id: 'barretta_fit', name: 'Barretta Proteica 30%', icon: '🍫', category: 'proteine', portion: '1 barretta (~50g)', kcal: 185, kcal100g: 370, protein: 18.0, carbs: 15.0, fats: 5.5, benefit: 'Comoda per recupero o spuntino fuori casa' },
+
+      // 🌾 CARBOIDRATI & CRUNCH
+      { id: 'gallette_riso', name: 'Gallette di Riso Integrale', icon: '🍘', category: 'carbo', portion: '2 gallette (~20g)', kcal: 70, kcal100g: 350, protein: 1.6, carbs: 15.0, fats: 0.5, benefit: 'Crunch friabile, ottimo sostituto del pane' },
+      { id: 'fiocchi_avena', name: 'Fiocchi d\'Avena (Porridge)', icon: '🥣', category: 'carbo', portion: '1 porzione (~40g)', kcal: 150, kcal100g: 375, protein: 5.4, carbs: 26.5, fats: 2.8, benefit: 'Beta-glucani ed energia a rilascio progressivo' },
+      { id: 'pane_segale', name: 'Pane di Segale Integrale', icon: '🍞', category: 'carbo', portion: '1 fetta (~40g)', kcal: 95, kcal100g: 238, protein: 3.2, carbs: 19.0, fats: 0.8, benefit: 'Basso picco glicemico e lunga sazietà' },
+      { id: 'fette_biscottate', name: 'Fette Biscottate Integrali', icon: '🥖', category: 'carbo', portion: '2 fette (~18g)', kcal: 68, kcal100g: 380, protein: 2.2, carbs: 13.0, fats: 1.2, benefit: 'Croccanti e leggere, ideali a colazione' },
+      { id: 'crackers_integrali', name: 'Crackers ai Cereali', icon: '🌾', category: 'carbo', portion: '1 pacchetto (~30g)', kcal: 125, kcal100g: 415, protein: 3.3, carbs: 21.0, fats: 3.5, benefit: 'Pratico spezza-fame da portare con sé' },
+
+      // 🥕 CRUNCH ZERO-ANSIA (SPECIFICI ANTI-FUMO)
+      { id: 'carote_crude', name: 'Carote Crude a Bastoncino', icon: '🥕', category: 'ansia', portion: '1 carota grande (~120g)', kcal: 42, kcal100g: 35, protein: 1.0, carbs: 9.0, fats: 0.2, benefit: 'Masticazione prolungata che placa il riflesso mano-bocca' },
+      { id: 'finocchio', name: 'Finocchio Crudo a Spicchi', icon: '🥗', category: 'ansia', portion: '1 porzione (~150g)', kcal: 22, kcal100g: 15, protein: 1.8, carbs: 1.5, fats: 0.3, benefit: 'Freschissimo, sapore d\'anice che cancella il sapore di tabacco' },
+      { id: 'cetriolo', name: 'Cetriolo Fresco a Rondelle', icon: '🥒', category: 'ansia', portion: '1 cetriolo (~150g)', kcal: 21, kcal100g: 14, protein: 1.0, carbs: 3.3, fats: 0.2, benefit: 'Idratazione al 96% contro la gola secca da astinenza' },
+      { id: 'pomodorini', name: 'Pomodorini Ciliegino', icon: '🍅', category: 'ansia', portion: '8 pomodorini (~120g)', kcal: 26, kcal100g: 22, protein: 1.2, carbs: 4.7, fats: 0.2, benefit: 'Licopene protettivo contro i radicali liberi' },
+      { id: 'sedano', name: 'Gambi di Sedano Croccante', icon: '🌿', category: 'ansia', portion: '2 coste (~100g)', kcal: 16, kcal100g: 16, protein: 0.7, carbs: 2.4, fats: 0.1, benefit: 'Effetto sgranocchiante antistress immediato' },
+
+      // 🍫 SFIZI FIT & MOMENTI RELAX
+      { id: 'cioccolato_85', name: 'Cioccolato Fondente 85%', icon: '🍫', category: 'sfizi', portion: '2 quadratini (~20g)', kcal: 115, kcal100g: 575, protein: 1.8, carbs: 7.0, fats: 9.5, benefit: 'Stimola endorfine e dopamina naturale' },
+      { id: 'miele_grezzo', name: 'Miele Grezzo Millefiori', icon: '🍯', category: 'sfizi', portion: '1 cucchiaino (~15g)', kcal: 48, kcal100g: 320, protein: 0.1, carbs: 12.3, fats: 0.0, benefit: 'Lenitivo ed emolliente per le vie aeree' },
+      { id: 'tisana_relax', name: 'Tisana Zenzero o Camomilla', icon: '🫖', category: 'sfizi', portion: '1 tazza grande (250ml)', kcal: 2, kcal100g: 1, protein: 0.0, carbs: 0.5, fats: 0.0, benefit: 'Sostituto rituale ideale della pausa caffè e fumo' },
+
+      // 🍽️ PASTI RAPIDI & BASI ALIMENTARI
+      { id: 'petto_pollo', name: 'Petto di Pollo ai Ferri', icon: '🍗', category: 'pasti', portion: '1 petto (~150g)', kcal: 165, kcal100g: 110, protein: 34.5, carbs: 0.0, fats: 1.8, benefit: '34.5g proteine pure per la ricostruzione muscolare' },
+      { id: 'tagliata_manzo', name: 'Tagliata di Manzo Magro', icon: '🥩', category: 'pasti', portion: '1 porzione (~150g)', kcal: 195, kcal100g: 130, protein: 31.0, carbs: 0.0, fats: 6.5, benefit: 'Ferro eme ad assorbimento immediato e creatina naturale' },
+      { id: 'salmone', name: 'Trancio di Salmone alla Piastra', icon: '🐟', category: 'pasti', portion: '1 trancio (~150g)', kcal: 280, kcal100g: 185, protein: 30.0, carbs: 0.0, fats: 18.0, benefit: 'Omega-3 EPA/DHA antinfiammatori per cuore e vasi' },
+      { id: 'riso_basmati', name: 'Riso Basmati Cotto', icon: '🍚', category: 'pasti', portion: '1 porzione (~180g cotto)', kcal: 240, kcal100g: 130, protein: 5.2, carbs: 54.0, fats: 0.8, benefit: 'Carboidrati puliti e massima tolleranza gastrica' },
+      { id: 'pasta_integrale', name: 'Pasta Integrale Cotta', icon: '🍝', category: 'pasti', portion: '1 piatto (~160g cotto)', kcal: 250, kcal100g: 150, protein: 9.5, carbs: 51.0, fats: 1.5, benefit: 'Rilascio prolungato di serotonina e sazietà' },
+      { id: 'olio_evo', name: 'Olio Extravergine d\'Oliva', icon: '🫒', category: 'pasti', portion: '1 cucchiaio (~10g)', kcal: 90, kcal100g: 884, protein: 0.0, carbs: 0.0, fats: 10.0, benefit: 'Polifenoli e acido oleico salva-cuore' },
+      { id: 'hummus', name: 'Hummus di Ceci', icon: '🧆', category: 'pasti', portion: '3 cucchiai colmi (~60g)', kcal: 100, kcal100g: 166, protein: 4.8, carbs: 9.0, fats: 6.0, benefit: 'Fibre solubili e gusto avvolgente' },
+      { id: 'tofu_piastra', name: 'Tofu al Naturale alla Piastra', icon: '🧊', category: 'pasti', portion: '1 panetto (~125g)', kcal: 110, kcal100g: 88, protein: 15.0, carbs: 2.0, fats: 5.5, benefit: 'Proteine 100% vegetali a zero colesterolo' },
+      { id: 'patate_forno', name: 'Patate al Forno con Erbe', icon: '🥔', category: 'pasti', portion: '1 patata media (~180g)', kcal: 155, kcal100g: 86, protein: 3.6, carbs: 36.0, fats: 0.2, benefit: 'Potassio e carboidrati amidacei facilmente assimilabili' },
+      { id: 'avocado', name: 'Avocado Fresco a Fette', icon: '🥑', category: 'pasti', portion: 'Metà frutto (~80g)', kcal: 130, kcal100g: 160, protein: 1.6, carbs: 2.0, fats: 12.0, benefit: 'Grassi monoinsaturi per il corretto assetto ormonale' }
+    ];
+
     const snacksKey = 'respira_snacks_' + new Date().toISOString().slice(0, 10);
     let snacksLog = JSON.parse(localStorage.getItem(snacksKey)) || [];
+    let currentFoodCategory = 'all';
+    let currentEncyclopediaCategory = 'all';
+
+    function renderQuickFoodsGrid(foodsToRender) {
+      const grid = document.getElementById('quickFoodsGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const list = foodsToRender || COMMON_FOODS_DB.filter(f => currentFoodCategory === 'all' || f.category === currentFoodCategory);
+
+      if (list.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-6 text-center text-slate-500 font-mono text-xs">[ Nessun alimento trovato con questi filtri ]</div>';
+        return;
+      }
+
+      list.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-2.5 bg-cyber-dark hover:bg-amber-950/40 border border-slate-800 hover:border-amber-400/80 rounded-xl flex flex-col justify-between transition group active:scale-95 shadow';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-2xl group-hover:scale-110 transition">${item.icon}</span>
+              <span class="text-[9px] font-arcade px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-500/40 font-bold">${item.kcal} KCAL</span>
+            </div>
+            <div class="text-xs font-black text-white uppercase truncate">${item.name}</div>
+            <div class="text-[9px] text-slate-400 truncate mb-1.5">${item.portion}</div>
+            <div class="text-[8px] text-cyan-400 font-mono">P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fats}g</div>
+          </div>
+          <button onclick="logSnack('${item.name} ${item.icon}', '${item.portion}', ${item.kcal}, ${item.protein}, ${item.carbs}, ${item.fats}); soundFx.bite();" class="mt-2.5 w-full py-1 bg-cyber-panel hover:bg-amber-500 hover:text-black border border-slate-700 hover:border-amber-400 text-slate-200 text-[10px] font-bold uppercase rounded transition">
+            + LOG (+10 XP)
+          </button>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterQuickFoods() {
+      const q = (document.getElementById('foodSearchInput')?.value || '').toLowerCase().trim();
+      let filtered = COMMON_FOODS_DB;
+      if (currentFoodCategory !== 'all') {
+        filtered = filtered.filter(f => f.category === currentFoodCategory);
+      }
+      if (q) {
+        filtered = filtered.filter(f => 
+          f.name.toLowerCase().includes(q) || 
+          f.portion.toLowerCase().includes(q) || 
+          f.benefit.toLowerCase().includes(q) ||
+          f.kcal.toString().includes(q)
+        );
+      }
+      renderQuickFoodsGrid(filtered);
+    }
+
+    function clearFoodSearch() {
+      const input = document.getElementById('foodSearchInput');
+      if (input) input.value = '';
+      setFoodCategory('all');
+    }
+
+    function setFoodCategory(cat) {
+      currentFoodCategory = cat;
+      document.querySelectorAll('.food-cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = 'food-cat-btn px-2.5 py-1 rounded bg-amber-500 text-black font-black whitespace-nowrap';
+        } else {
+          btn.className = 'food-cat-btn px-2.5 py-1 rounded bg-cyber-panel hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap';
+        }
+      });
+      filterQuickFoods();
+    }
 
     function renderSnacks() {
       const list = document.getElementById('snacksList');
+      if (!list) return;
       list.innerHTML = '';
+
+      let totalKcal = 0;
+      let totalProtein = 0;
+      let totalCarbs = 0;
+      let totalFat = 0;
+
+      snacksLog.forEach(s => {
+        totalKcal += (s.kcal || 0);
+        totalProtein += (s.protein || 0);
+        totalCarbs += (s.carbs || 0);
+        totalFat += (s.fats || 0);
+      });
+
+      // Update HUD stats
+      const totalKcalEl = document.getElementById('todayKcalTotal');
+      if (totalKcalEl) totalKcalEl.textContent = totalKcal;
+      const totalProteinEl = document.getElementById('todayProteinTotal');
+      if (totalProteinEl) totalProteinEl.textContent = Math.round(totalProtein * 10) / 10;
+      const totalCarbsEl = document.getElementById('todayCarbsTotal');
+      if (totalCarbsEl) totalCarbsEl.textContent = Math.round(totalCarbs * 10) / 10;
+      const totalFatEl = document.getElementById('todayFatTotal');
+      if (totalFatEl) totalFatEl.textContent = Math.round(totalFat * 10) / 10;
+
+      const progressBar = document.getElementById('todayKcalBar');
+      if (progressBar) {
+        const pct = Math.min(100, Math.round((totalKcal / 2200) * 100));
+        progressBar.style.width = pct + '%';
+      }
+
       if (snacksLog.length === 0) {
         list.innerHTML = '<div class="text-slate-600 italic py-1">[ Nessun item consumato oggi ]</div>';
         return;
       }
-      snacksLog.slice().reverse().forEach(s => {
+
+      snacksLog.slice().reverse().forEach((s, revIdx) => {
+        const origIdx = snacksLog.length - 1 - revIdx;
         const item = document.createElement('div');
-        item.className = 'flex items-center justify-between p-2 bg-cyber-panel rounded border border-slate-800';
+        item.className = 'flex items-center justify-between p-2 bg-cyber-panel rounded border border-slate-800 hover:border-slate-700 transition';
+        
+        let macrosSpan = '';
+        if (s.protein || s.carbs || s.fats) {
+          macrosSpan = `<span class="text-[9px] text-cyan-400 font-mono hidden md:inline">• P:${s.protein || 0}g C:${s.carbs || 0}g F:${s.fats || 0}g</span>`;
+        }
+
         item.innerHTML = `
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 truncate">
             <span class="text-amber-400 font-bold">•</span>
-            <span class="text-slate-200 font-bold uppercase">${s.name}</span>
+            <span class="text-slate-200 font-bold uppercase truncate">${s.name}</span>
+            ${s.kcal ? `<span class="badge-cut text-[9px] px-1.5 py-0.2 bg-amber-950 text-amber-300 font-arcade border border-amber-500/40">${s.kcal} kcal</span>` : ''}
+            ${macrosSpan}
             ${s.note ? `<span class="text-[9px] text-slate-500 font-mono hidden sm:inline">(${s.note})</span>` : ''}
           </div>
-          <span class="text-[9px] text-slate-500 font-arcade">${s.time}</span>
+          <div class="flex items-center gap-2">
+            <span class="text-[9px] text-slate-500 font-arcade whitespace-nowrap">${s.time}</span>
+            <button onclick="deleteSnack(${origIdx}); soundFx.click();" title="Elimina voce" class="text-slate-600 hover:text-red-400 text-xs transition p-1">🗑️</button>
+          </div>
         `;
         list.appendChild(item);
       });
     }
 
-    function logSnack(name, note = '') {
+    function logSnack(name, note = '', kcal = 0, p = 0, c = 0, f = 0) {
       const now = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
-      snacksLog.push({ name, note, time: now });
+      snacksLog.push({ 
+        name, 
+        note, 
+        kcal: parseInt(kcal) || 0, 
+        protein: parseFloat(p) || 0, 
+        carbs: parseFloat(c) || 0, 
+        fats: parseFloat(f) || 0, 
+        time: now 
+      });
       localStorage.setItem(snacksKey, JSON.stringify(snacksLog));
       addHeroXp(10, 'Snack sano');
       renderSnacks();
     }
 
+    function deleteSnack(index) {
+      if (index >= 0 && index < snacksLog.length) {
+        snacksLog.splice(index, 1);
+        localStorage.setItem(snacksKey, JSON.stringify(snacksLog));
+        renderSnacks();
+      }
+    }
+
     function addCustomSnack() {
       const input = document.getElementById('customSnackInput');
+      const kcalInput = document.getElementById('customSnackKcal');
       const val = input.value.trim();
+      const kcalVal = parseInt(kcalInput?.value) || 0;
       if (!val) return;
-      logSnack(val, 'Custom item');
+      logSnack(val, 'Custom item', kcalVal);
       input.value = '';
+      if (kcalInput) kcalInput.value = '';
     }
 
     function clearSnacksToday() {
-      if (confirm('Svuotare registro di oggi?')) {
+      if (confirm('Svuotare interamente il registro spuntini di oggi?')) {
         snacksLog = [];
         localStorage.setItem(snacksKey, JSON.stringify(snacksLog));
         renderSnacks();
       }
     }
+
+    // --- MODAL ENCICLOPEDIA ALIMENTI COMPLETA ---
+    function openFoodEncyclopediaModal() {
+      const modal = document.getElementById('foodEncyclopediaModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      renderEncyclopedia();
+    }
+
+    function closeFoodEncyclopediaModal() {
+      const modal = document.getElementById('foodEncyclopediaModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function setEncyclopediaCategory(cat) {
+      currentEncyclopediaCategory = cat;
+      document.querySelectorAll('.enc-cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = 'enc-cat-btn px-2.5 py-1 rounded bg-amber-500 text-black font-black whitespace-nowrap';
+        } else {
+          btn.className = 'enc-cat-btn px-2.5 py-1 rounded bg-cyber-dark hover:bg-slate-800 text-slate-300 border border-slate-700 whitespace-nowrap';
+        }
+      });
+      filterEncyclopedia();
+    }
+
+    function renderEncyclopedia(foodsList) {
+      const container = document.getElementById('encyclopediaFoodsList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let list = foodsList || COMMON_FOODS_DB;
+      if (currentEncyclopediaCategory !== 'all') {
+        list = list.filter(f => f.category === currentEncyclopediaCategory);
+      }
+
+      const sortMode = document.getElementById('encyclopediaSortSelect')?.value || 'name';
+      list = [...list].sort((a, b) => {
+        if (sortMode === 'kcal_asc') return a.kcal - b.kcal;
+        if (sortMode === 'kcal_desc') return b.kcal - a.kcal;
+        if (sortMode === 'protein_desc') return b.protein - a.protein;
+        return a.name.localeCompare(b.name);
+      });
+
+      if (list.length === 0) {
+        container.innerHTML = '<div class="py-12 text-center text-slate-500 font-mono">[ Nessun alimento corrisponde alla ricerca ]</div>';
+        return;
+      }
+
+      list.forEach(food => {
+        const row = document.createElement('div');
+        row.className = 'p-3 bg-cyber-dark hover:bg-slate-900 border border-slate-800 hover:border-amber-500/50 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition';
+        
+        row.innerHTML = `
+          <div class="flex items-start sm:items-center gap-3 flex-1">
+            <div class="w-10 h-10 rounded-lg bg-cyber-panel border border-slate-700 flex items-center justify-center text-2xl flex-shrink-0">
+              ${food.icon}
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-sm font-black text-white uppercase">${food.name}</span>
+                <span class="badge-cut text-[9px] px-2 py-0.5 bg-amber-950 text-amber-300 font-arcade border border-amber-500/40">${food.kcal} KCAL (${food.portion})</span>
+                <span class="text-[9px] text-slate-500 font-mono">${food.kcal100g} kcal / 100g</span>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-0.5">
+                <strong class="text-cyan-400">P: ${food.protein}g</strong> • 
+                <strong class="text-purple-400">C: ${food.carbs}g</strong> • 
+                <strong class="text-emerald-400">F: ${food.fats}g</strong>
+              </div>
+              <div class="text-[9px] text-amber-300/80 italic mt-0.5 font-sans">
+                💡 ${food.benefit}
+              </div>
+            </div>
+          </div>
+          <button onclick="logSnack('${food.name} ${food.icon}', '${food.portion}', ${food.kcal}, ${food.protein}, ${food.carbs}, ${food.fats}); soundFx.bite(); closeFoodEncyclopediaModal();" class="badge-cut sm:self-center px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-black font-black text-xs uppercase tracking-wider transition whitespace-nowrap active:scale-95 shadow">
+            + AGGIUNGI (+10 XP)
+          </button>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function filterEncyclopedia() {
+      const q = (document.getElementById('encyclopediaSearchInput')?.value || '').toLowerCase().trim();
+      let list = COMMON_FOODS_DB;
+      if (currentEncyclopediaCategory !== 'all') {
+        list = list.filter(f => f.category === currentEncyclopediaCategory);
+      }
+      if (q) {
+        list = list.filter(f => 
+          f.name.toLowerCase().includes(q) || 
+          f.benefit.toLowerCase().includes(q) || 
+          f.portion.toLowerCase().includes(q) ||
+          f.kcal.toString().includes(q)
+        );
+      }
+      renderEncyclopedia(list);
+    }
+
 
     // --- SONNO ---
     let selectedQuality = 'Full HP';
@@ -5608,8 +6447,10 @@
     // --- INIT ---
     if (typeof ParticleEngine !== 'undefined') ParticleEngine.init();
     updateHeroUI();
-    selectWorkoutDay('venerdi');
+    renderWorkoutTabs();
+    selectWorkoutDay(currentSelectedDay);
     updateHydrationUI();
+    renderQuickFoodsGrid();
     renderSnacks();
     renderSleepRecord();
     updateLiveStats();
