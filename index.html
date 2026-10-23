@@ -293,18 +293,33 @@
           </button>
         </div>
 
-        <!-- GOKU TRANSFORMATION STATUS & SELECTOR -->
-        <div id="gokuEvolutionBox" class="bg-amber-950/40 border border-amber-500/40 rounded-lg p-2 flex items-center justify-between text-[9px] font-mono mb-2.5">
-          <div class="flex items-center gap-1.5 cursor-pointer" onclick="cycleGokuForm()">
-            <span class="text-sm">⚡</span>
-            <div>
-              <div class="text-[8px] text-amber-400 font-bold uppercase tracking-wider">EVOLUZIONE SAIYAN (8 FORME)</div>
-              <span id="gokuFormTitle" class="text-white font-black uppercase text-[10px]">BASE (LIVELLO 1)</span>
+        <!-- GOKU TRANSFORMATION STATUS & LEVEL-BASED PROGRESS (AUTOMATIC UNLOCK) -->
+        <div id="gokuEvolutionBox" class="bg-gradient-to-r from-amber-950/60 via-slate-950 to-amber-950/40 border border-amber-500/50 rounded-xl p-2.5 space-y-1.5 font-mono mb-2.5 shadow-lg select-none">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm animate-pulse">⚡</span>
+              <div>
+                <div class="text-[8px] text-amber-400 font-bold uppercase tracking-wider">TRASFORMAZIONE SAIYAN (SBLOCCO A LIVELLI)</div>
+                <div id="gokuFormTitle" class="text-white font-black uppercase text-[11px] glow-amber leading-tight">BASE (LIVELLO 1)</div>
+              </div>
+            </div>
+            <div id="gokuNextUnlockBadge" class="text-right">
+              <span class="px-2 py-0.5 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">
+                LV.1 ATTIVO
+              </span>
             </div>
           </div>
-          <button type="button" onclick="cycleGokuForm()" class="badge-cut px-2.5 py-1 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-wider transition active:scale-95 shadow cursor-pointer">
-            TRASFORMA ⚡
-          </button>
+
+          <!-- Progress bar to next transformation -->
+          <div class="pt-0.5 space-y-1">
+            <div class="flex items-center justify-between text-[8px] text-slate-400 font-mono">
+              <span id="gokuNextFormLabel" class="text-amber-300/90 font-bold">PROSSIMA FORMA: SSJ1 (LV.2)</span>
+              <span id="gokuNextFormXpProgress" class="text-slate-300">0 / 200 XP</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-700/60">
+              <div id="gokuNextFormBar" class="h-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 transition-all duration-300" style="width: 0%;"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Standee Hologram Stage (Full-body Animated Fighter) -->
@@ -538,13 +553,14 @@
         </div>
       </div>
 
-      <!-- 3 INTERACTIVE ARCADE MINIGAMES CARDS -->
+      <!-- 5 INTERACTIVE ARCADE MINIGAMES SUITE -->
       <div>
-        <div class="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
-          <span>⚡ SELEZIONA MINIGIOCO PER DISTRUGGERE IL CRAVING (+100 XP + PROMPT DIARIO)</span>
+        <div class="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold mb-3 flex items-center justify-between">
+          <span class="flex items-center gap-2">⚡ SELEZIONA MINIGIOCO PER SCONFIGGERE IL CRAVING (+100 XP + PROMPT DIARIO)</span>
+          <span class="text-[10px] text-amber-400 font-arcade">5 GIOCHI TOTALI</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           
           <!-- GAME 1: CRAVING SMASHER -->
           <div class="bg-gradient-to-b from-amber-950/30 to-cyber-dark border border-amber-500/40 hover:border-amber-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 group">
@@ -568,7 +584,29 @@
             </div>
           </div>
 
-          <!-- GAME 2: KI DEFLECTOR -->
+          <!-- GAME 2: SMOKE SLICER -->
+          <div class="bg-gradient-to-b from-emerald-950/30 to-cyber-dark border border-emerald-500/40 hover:border-emerald-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2 py-0.5 rounded text-[9px] font-arcade bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">BLADE // SLASH ACTION</span>
+                <span class="text-2xl">⚔️💨</span>
+              </div>
+              <h3 class="text-base font-black text-white group-hover:text-emerald-300 transition uppercase tracking-wide">
+                Smoke Slicer
+              </h3>
+              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                Stile Fruit Ninja! Trascina il dito o il mouse per affettare a mezz'aria le sigarette tossiche. Taglia l'acqua pura per combo ed evita i barili ☣️!
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-emerald-400 font-mono font-bold">+100 XP</span>
+              <button onclick="openSlicerModal(); soundFx.click();" class="badge-cut px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 shadow">
+                GIOCA ORA ▶
+              </button>
+            </div>
+          </div>
+
+          <!-- GAME 3: KI DEFLECTOR -->
           <div class="bg-gradient-to-b from-cyan-950/30 to-cyber-dark border border-cyan-500/40 hover:border-cyan-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 group">
             <div>
               <div class="flex items-center justify-between mb-3">
@@ -590,7 +628,29 @@
             </div>
           </div>
 
-          <!-- GAME 3: CYBER NEURO-HACK -->
+          <!-- GAME 4: KI DODGER -->
+          <div class="bg-gradient-to-b from-blue-950/30 to-cyber-dark border border-blue-500/40 hover:border-blue-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2 py-0.5 rounded text-[9px] font-arcade bg-blue-500/20 text-blue-300 border border-blue-500/40">FLIGHT // SKY ESCAPE</span>
+                <span class="text-2xl">🚀☁️</span>
+              </div>
+              <h3 class="text-base font-black text-white group-hover:text-blue-300 transition uppercase tracking-wide">
+                Ki Dodger
+              </h3>
+              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                Vola nei cieli con l'impulso Ki del tuo guerriero! Premi Spazio o tocca lo schermo per dare spinta verso l'alto e schivare le colonne di fumo tossico.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-emerald-400 font-mono font-bold">+100 XP</span>
+              <button onclick="openDodgerModal(); soundFx.click();" class="badge-cut px-3.5 py-1.5 bg-blue-500 hover:bg-blue-400 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 shadow">
+                GIOCA ORA ▶
+              </button>
+            </div>
+          </div>
+
+          <!-- GAME 5: CYBER NEURO-HACK -->
           <div class="bg-gradient-to-b from-purple-950/30 to-cyber-dark border border-purple-500/40 hover:border-purple-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10 group">
             <div>
               <div class="flex items-center justify-between mb-3">
@@ -1692,6 +1752,107 @@
     </div>
   </div>
 
+  <!-- MODAL: SMOKE SLICER MINIGAME -->
+  <div id="minigameSlicerModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="hud-box bg-cyber-panel border-2 border-emerald-500 max-w-lg w-full p-4 sm:p-5 text-center space-y-3 shadow-2xl relative select-none">
+      <button onclick="closeSlicerModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-arcade text-lg">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-xs font-arcade text-emerald-400 uppercase tracking-widest">CYBER BLADE // SMOKE SLICER</span>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wider glow-emerald">
+          ⚔️ SMOKE SLICER
+        </h3>
+        <p class="text-xs text-slate-300">
+          Trascina rapidamente il mouse o il dito sullo schermo per affettare le sigarette (🚬 +100) e il fumo (💨 +150). Raccogli l'acqua pura (🧪 +250) ed evita i barili tossici (☣️ -100)!
+        </p>
+      </div>
+
+      <!-- Live HUD -->
+      <div class="flex items-center justify-between bg-cyber-dark/80 border border-emerald-500/30 rounded-lg px-4 py-2 text-xs font-mono">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">TEMPO:</span>
+          <span id="slicerTimerText" class="text-base font-black text-amber-400">25s</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">AFFETTATI:</span>
+          <span id="slicerCountText" class="text-base font-black text-emerald-400">0 / 12</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">SCORE:</span>
+          <span id="slicerScoreText" class="text-base font-black text-cyan-400">0</span>
+        </div>
+      </div>
+
+      <!-- Canvas Arena -->
+      <div id="slicerCanvasContainer" class="relative w-full h-72 sm:h-80 bg-slate-950 rounded-xl border border-emerald-500/40 overflow-hidden cursor-crosshair shadow-inner">
+        <canvas id="slicerCanvas" class="w-full h-full block"></canvas>
+        <div id="slicerStartOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-3 p-4">
+          <span class="text-4xl animate-bounce">⚔️</span>
+          <p class="text-xs text-slate-200 font-mono text-center">Affetta almeno 12 sigarette/nubi per liberare i polmoni!</p>
+          <button onclick="startSlicerGame()" class="badge-cut px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 shadow-lg shadow-emerald-500/30">
+            ▶ INIZIA SFIDA (25s)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: KI DODGER MINIGAME -->
+  <div id="minigameDodgerModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="hud-box bg-cyber-panel border-2 border-cyan-500 max-w-lg w-full p-4 sm:p-5 text-center space-y-3 shadow-2xl relative select-none">
+      <button onclick="closeDodgerModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-arcade text-lg">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-xs font-arcade text-cyan-400 uppercase tracking-widest">SKY ESCAPE // KI FLIGHT DODGER</span>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wider glow-cyan">
+          🚀 KI DODGER
+        </h3>
+        <p class="text-xs text-slate-300">
+          Premi SPAZIO o tocca per dare impulso Ki verso l'alto ed evitare le colonne di fumo tossico!
+        </p>
+      </div>
+
+      <!-- Live HUD -->
+      <div class="flex items-center justify-between bg-cyber-dark/80 border border-cyan-500/30 rounded-lg px-4 py-2 text-xs font-mono">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">SHIELD:</span>
+          <span id="dodgerHpDisplay" class="text-red-400 text-sm">❤️❤️❤️</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">COLONNE:</span>
+          <span id="dodgerGateCountText" class="text-base font-black text-cyan-400">0 / 8</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">SCORE:</span>
+          <span id="dodgerScoreText" class="text-base font-black text-amber-400">0</span>
+        </div>
+      </div>
+
+      <!-- Canvas Field -->
+      <div class="relative w-full h-72 sm:h-80 bg-slate-950 rounded-xl border border-cyan-500/40 overflow-hidden cursor-pointer shadow-inner" onclick="dodgerFlap()">
+        <canvas id="dodgerCanvas" class="w-full h-full block"></canvas>
+        <div id="dodgerStartOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-3 p-4">
+          <span class="text-4xl animate-pulse">🚀</span>
+          <p class="text-xs text-slate-200 font-mono text-center">Supera 8 colonne di fumo tossico senza esaurire lo scudo!</p>
+          <button onclick="startDodgerGame(event)" class="badge-cut px-6 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 shadow-lg shadow-cyan-500/30">
+            ▶ VOLA VERSO LA SALUTE
+          </button>
+        </div>
+      </div>
+
+      <!-- Big Tap / Flap Button -->
+      <button onclick="dodgerFlap()" class="badge-cut w-full py-3.5 bg-cyan-500 hover:bg-cyan-400 text-black font-black text-xs uppercase tracking-widest transition active:scale-95 shadow-lg shadow-cyan-500/30 flex items-center justify-center gap-2">
+        <span>🚀 IMPULSO KI (BARRA SPAZIATRICE O TAP)</span>
+      </button>
+    </div>
+  </div>
+
   <!-- MODAL: CRAVING VICTORY & AUTOMATIC DIARY PROMPT -->
   <div id="cravingVictoryModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="hud-box bg-cyber-panel border-2 border-emerald-500 max-w-md w-full p-5 sm:p-6 text-center space-y-4 shadow-2xl relative font-sans">
@@ -2208,10 +2369,11 @@
       }
     };
 
-    // --- TRASFORMAZIONI GOKU (8 FORME EVOLUTIVE CON PARTICELLE E ASSET UNICI) ---
+    // --- TRASFORMAZIONI GOKU (8 FORME SBLOCCABILI SOLO CON XP E LIVELLO) ---
     const GOKU_FORMS = [
       {
         minLevel: 1,
+        requiredXp: 0,
         id: 'base',
         name: 'GOKU (BASE)',
         title: 'SAIYAN WARRIOR',
@@ -2229,6 +2391,7 @@
       },
       {
         minLevel: 2,
+        requiredXp: 200,
         id: 'ssj1',
         name: 'GOKU (SUPER SAIYAN)',
         title: 'LEGENDARY SUPER SAIYAN',
@@ -2246,6 +2409,7 @@
       },
       {
         minLevel: 4,
+        requiredXp: 600,
         id: 'ssj2',
         name: 'GOKU (SUPER SAIYAN 2)',
         title: 'ASCENDED SAIYAN',
@@ -2263,6 +2427,7 @@
       },
       {
         minLevel: 6,
+        requiredXp: 1000,
         id: 'ssj3',
         name: 'GOKU (SUPER SAIYAN 3)',
         title: 'SUPER SAIYAN 3',
@@ -2280,6 +2445,7 @@
       },
       {
         minLevel: 8,
+        requiredXp: 1400,
         id: 'god',
         name: 'GOKU (SSJ GOD)',
         title: 'DIVINE SAIYAN',
@@ -2297,6 +2463,7 @@
       },
       {
         minLevel: 10,
+        requiredXp: 1800,
         id: 'blue',
         name: 'GOKU (SSJ BLUE)',
         title: 'SUPER SAIYAN GOD SS',
@@ -2314,6 +2481,7 @@
       },
       {
         minLevel: 12,
+        requiredXp: 2200,
         id: 'ui_sign',
         name: 'GOKU (UI INCOMPLETO)',
         title: 'ULTRA INSTINCT SIGN (SEGNO)',
@@ -2330,7 +2498,8 @@
         quote: '"Il calore del Ki interiore si espande: la mente si svuota da ogni craving. Il corpo reagisce istintivamente."'
       },
       {
-        minLevel: 14,
+        minLevel: 15,
+        requiredXp: 2800,
         id: 'ui',
         name: 'GOKU (ULTRA ISTINTO COMPLETO)',
         title: 'MASTERED ULTRA INSTINCT (PERFEZIONATO)',
@@ -2792,15 +2961,9 @@
       updateLiveStats();
     }
 
-    // --- GOKU EVOLUTION HELPERS ---
+    // --- GOKU EVOLUTION HELPERS (AUTOMATIC UNLOCK BY LEVEL & XP) ---
     function getGokuActiveForm() {
-      if (gokuManualFormIndex === null && config.gokuFormIndex !== undefined && config.gokuFormIndex !== null) {
-        gokuManualFormIndex = config.gokuFormIndex;
-      }
       const currentLevel = config.heroLevel || 1;
-      if (gokuManualFormIndex !== null && gokuManualFormIndex >= 0 && gokuManualFormIndex < GOKU_FORMS.length) {
-        return GOKU_FORMS[gokuManualFormIndex];
-      }
       let active = GOKU_FORMS[0];
       for (let i = 0; i < GOKU_FORMS.length; i++) {
         if (currentLevel >= GOKU_FORMS[i].minLevel) {
@@ -2810,20 +2973,21 @@
       return active;
     }
 
-    function cycleGokuForm() {
-      soundFx.levelUp();
-      const currentForm = getGokuActiveForm();
-      const currentIdx = GOKU_FORMS.findIndex(f => f.id === currentForm.id);
-      gokuManualFormIndex = (currentIdx + 1) % GOKU_FORMS.length;
-      config.gokuFormIndex = gokuManualFormIndex;
-      localStorage.setItem('respira_config', JSON.stringify(config));
-      updateHeroUI();
-      triggerHeroCheer();
+    function getGokuNextForm() {
+      const currentLevel = config.heroLevel || 1;
+      for (let i = 0; i < GOKU_FORMS.length; i++) {
+        if (currentLevel < GOKU_FORMS[i].minLevel) {
+          return GOKU_FORMS[i];
+        }
+      }
+      return null;
     }
 
     // --- LEVEL UP / XP ---
     function addHeroXp(amount, reason = '') {
       const oldLevel = config.heroLevel || 1;
+      const oldForm = (config.selectedHero === 'goku') ? getGokuActiveForm() : null;
+
       config.heroXp = (config.heroXp || 0) + amount;
       const newLevel = Math.floor(config.heroXp / 200) + 1;
       const leveledUp = newLevel > oldLevel;
@@ -2836,8 +3000,13 @@
         confetti({ particleCount: 160, spread: 90, origin: { y: 0.5 } });
         soundFx.levelUp();
         if (config.selectedHero === 'goku') {
-          const form = getGokuActiveForm();
-          alert(`⚡ TRASFORMAZIONE SBLOCCATA! Sei al Livello ${newLevel}: Goku risveglia ${form.name}! Statistiche e Ki aumentati!`);
+          const newForm = getGokuActiveForm();
+          if (oldForm && newForm.id !== oldForm.id) {
+            triggerHeroCheer();
+            alert(`⚡ TRASFORMAZIONE RISVEGLIATA! Sei salito al Livello ${newLevel}: Goku sblocca ${newForm.name}! Aura e Ki amplificati!`);
+          } else {
+            alert(`🌟 LEVEL UP! Sei salito al Livello ${newLevel}! Continua ad allenarti per sbloccare la prossima evoluzione!`);
+          }
         } else {
           const hero = HEROES[config.selectedHero] || HEROES.goku;
           alert(`🌟 LEVEL UP! Il tuo ${hero.name} è salito al Livello ${newLevel}! Statistiche aumentate!`);
@@ -2853,10 +3022,12 @@
       const baseHero = HEROES[config.selectedHero];
       let displayHero = { ...baseHero };
 
-      // Se Goku è attivo, determina la forma attuale
+      // Se Goku è attivo, determina la forma attuale basata rigorosamente su Livello e XP
       const gokuBox = document.getElementById('gokuEvolutionBox');
       if (config.selectedHero === 'goku') {
         const activeForm = getGokuActiveForm();
+        const nextForm = getGokuNextForm();
+
         displayHero.name = activeForm.name;
         displayHero.title = activeForm.title;
         displayHero.img = activeForm.img;
@@ -2871,7 +3042,44 @@
         if (gokuBox) {
           gokuBox.classList.remove('hidden');
           const gokuTitle = document.getElementById('gokuFormTitle');
-          if (gokuTitle) gokuTitle.textContent = `${activeForm.name} (LV.${activeForm.minLevel}+)`;
+          if (gokuTitle) gokuTitle.textContent = activeForm.name;
+
+          const badgeEl = document.getElementById('gokuNextUnlockBadge');
+          const nextLabelEl = document.getElementById('gokuNextFormLabel');
+          const nextXpEl = document.getElementById('gokuNextFormXpProgress');
+          const nextBarEl = document.getElementById('gokuNextFormBar');
+
+          if (nextForm) {
+            if (badgeEl) {
+              badgeEl.innerHTML = `<span class="px-2 py-0.5 rounded text-[8px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">LV.${config.heroLevel || 1} ATTIVO</span>`;
+            }
+            if (nextLabelEl) {
+              nextLabelEl.textContent = `PROSSIMA FORMA: ${nextForm.name} (LV.${nextForm.minLevel})`;
+            }
+
+            const prevXp = activeForm.requiredXp || 0;
+            const targetXp = nextForm.requiredXp || (nextForm.minLevel * 200 - 200);
+            const currentXp = config.heroXp || 0;
+            const progressRange = Math.max(1, targetXp - prevXp);
+            const currentProgress = Math.max(0, currentXp - prevXp);
+            const pct = Math.min(100, Math.round((currentProgress / progressRange) * 100));
+
+            if (nextXpEl) nextXpEl.textContent = `${currentXp} / ${targetXp} XP (${pct}%)`;
+            if (nextBarEl) nextBarEl.style.width = `${pct}%`;
+          } else {
+            // Mastered Ultra Instinct
+            if (badgeEl) {
+              badgeEl.innerHTML = `<span class="px-2 py-0.5 rounded text-[8px] font-bold bg-purple-500/30 text-purple-200 border border-purple-400">✨ FORMA SUPREMA</span>`;
+            }
+            if (nextLabelEl) {
+              nextLabelEl.textContent = `ULTRA ISTINTO PERFEZIONATO (FORMA FINALE)`;
+            }
+            if (nextXpEl) nextXpEl.textContent = `${config.heroXp || 0} XP (100%)`;
+            if (nextBarEl) {
+              nextBarEl.style.width = `100%`;
+              nextBarEl.className = 'h-full bg-gradient-to-r from-purple-500 via-cyan-400 to-white transition-all duration-300';
+            }
+          }
         }
       } else {
         if (gokuBox) gokuBox.classList.add('hidden');
@@ -4329,6 +4537,540 @@
       const stageEl = document.getElementById('neuroStageText');
       if (stageEl) stageEl.textContent = `STAGE ${neuroStage} / 4`;
     }
+
+
+    // ========================================================
+    // 6. MINIGAME 4: SMOKE SLICER (FRUIT NINJA / BLADE ACTION)
+    // ========================================================
+    let slicerCanvas = null;
+    let slicerCtx = null;
+    let slicerAnimFrame = null;
+    let slicerTimer = null;
+    let slicerRunning = false;
+    let slicerTimeLeft = 25;
+    let slicerCount = 0;
+    const slicerTarget = 12;
+    let slicerScore = 0;
+    let slicerItems = [];
+    let slicerTrail = [];
+    let slicerIsDown = false;
+    let slicerLastPos = null;
+
+    function openSlicerModal() {
+      document.getElementById('minigameSlicerModal').classList.remove('hidden');
+      slicerRunning = false;
+      slicerScore = 0;
+      slicerCount = 0;
+      slicerTimeLeft = 25;
+      updateSlicerUI();
+
+      slicerCanvas = document.getElementById('slicerCanvas');
+      if (slicerCanvas) {
+        const container = document.getElementById('slicerCanvasContainer');
+        slicerCanvas.width = container ? container.offsetWidth : 450;
+        slicerCanvas.height = container ? container.offsetHeight : 320;
+        slicerCtx = slicerCanvas.getContext('2d');
+      }
+
+      document.getElementById('slicerStartOverlay').classList.remove('hidden');
+      initSlicerPointerEvents();
+    }
+
+    function closeSlicerModal() {
+      stopSlicerGame();
+      document.getElementById('minigameSlicerModal').classList.add('hidden');
+    }
+
+    function initSlicerPointerEvents() {
+      if (!slicerCanvas) return;
+
+      const getPos = (e) => {
+        const rect = slicerCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top,
+          time: performance.now()
+        };
+      };
+
+      slicerCanvas.onpointerdown = (e) => {
+        if (!slicerRunning) return;
+        slicerIsDown = true;
+        const p = getPos(e);
+        slicerTrail = [p];
+        slicerLastPos = p;
+      };
+
+      slicerCanvas.onpointermove = (e) => {
+        if (!slicerRunning || !slicerIsDown) return;
+        const p = getPos(e);
+        slicerTrail.push(p);
+
+        if (slicerLastPos) {
+          checkSlicerIntersection(slicerLastPos, p);
+        }
+        slicerLastPos = p;
+      };
+
+      window.onpointerup = () => {
+        slicerIsDown = false;
+        slicerLastPos = null;
+      };
+    }
+
+    function startSlicerGame() {
+      document.getElementById('slicerStartOverlay').classList.add('hidden');
+      slicerRunning = true;
+      slicerScore = 0;
+      slicerCount = 0;
+      slicerTimeLeft = 25;
+      slicerItems = [];
+      slicerTrail = [];
+      updateSlicerUI();
+
+      soundFx.strike();
+
+      clearInterval(slicerTimer);
+      slicerTimer = setInterval(() => {
+        slicerTimeLeft--;
+        updateSlicerUI();
+        if (slicerTimeLeft <= 0) {
+          endSlicerGame(slicerCount >= 10);
+        }
+      }, 1000);
+
+      if (slicerAnimFrame) cancelAnimationFrame(slicerAnimFrame);
+      slicerAnimFrame = requestAnimationFrame(slicerLoop);
+    }
+
+    function stopSlicerGame() {
+      slicerRunning = false;
+      clearInterval(slicerTimer);
+      if (slicerAnimFrame) cancelAnimationFrame(slicerAnimFrame);
+      slicerItems = [];
+      slicerTrail = [];
+    }
+
+    let lastSlicerSpawn = 0;
+    function slicerLoop(timestamp) {
+      if (!slicerRunning || !slicerCtx || !slicerCanvas) return;
+
+      const w = slicerCanvas.width;
+      const h = slicerCanvas.height;
+      slicerCtx.clearRect(0, 0, w, h);
+
+      // Spawn items
+      if (timestamp - lastSlicerSpawn > 950) {
+        lastSlicerSpawn = timestamp;
+        const count = Math.random() > 0.6 ? 2 : 1;
+        for (let k = 0; k < count; k++) {
+          spawnSlicerItem(w, h);
+        }
+      }
+
+      // Update & Draw Items
+      for (let i = slicerItems.length - 1; i >= 0; i--) {
+        const item = slicerItems[i];
+        item.x += item.vx;
+        item.y += item.vy;
+        item.vy += 0.32; // Gravity
+        item.rotation += item.vRot;
+
+        slicerCtx.save();
+        slicerCtx.translate(item.x, item.y);
+        slicerCtx.rotate(item.rotation);
+
+        if (item.sliced) {
+          // Draw two separated halves
+          item.sliceDist = (item.sliceDist || 0) + 2.5;
+          slicerCtx.font = "26px sans-serif";
+          slicerCtx.textAlign = "center";
+          slicerCtx.textBaseline = "middle";
+          slicerCtx.globalAlpha = Math.max(0, 1 - item.sliceDist / 40);
+
+          slicerCtx.fillText(item.icon, -item.sliceDist, 0);
+          slicerCtx.fillText(item.icon, item.sliceDist, 0);
+        } else {
+          slicerCtx.font = "34px sans-serif";
+          slicerCtx.textAlign = "center";
+          slicerCtx.textBaseline = "middle";
+          slicerCtx.fillText(item.icon, 0, 0);
+        }
+        slicerCtx.restore();
+
+        // Remove fallen items
+        if (item.y > h + 60) {
+          slicerItems.splice(i, 1);
+        }
+      }
+
+      // Draw Blade Trail
+      const now = performance.now();
+      slicerTrail = slicerTrail.filter(p => now - p.time < 160);
+
+      if (slicerTrail.length > 1) {
+        slicerCtx.save();
+        slicerCtx.beginPath();
+        slicerCtx.moveTo(slicerTrail[0].x, slicerTrail[0].y);
+        for (let i = 1; i < slicerTrail.length; i++) {
+          slicerCtx.lineTo(slicerTrail[i].x, slicerTrail[i].y);
+        }
+        slicerCtx.strokeStyle = "#10b981";
+        slicerCtx.shadowColor = "#34d399";
+        slicerCtx.shadowBlur = 14;
+        slicerCtx.lineWidth = 4;
+        slicerCtx.lineCap = "round";
+        slicerCtx.lineJoin = "round";
+        slicerCtx.stroke();
+        slicerCtx.restore();
+      }
+
+      slicerAnimFrame = requestAnimationFrame(slicerLoop);
+    }
+
+    function spawnSlicerItem(w, h) {
+      const rand = Math.random();
+      let type = 'cig';
+      let icon = '🚬';
+      let pts = 100;
+
+      if (rand < 0.65) {
+        type = 'cig'; icon = '🚬'; pts = 100;
+      } else if (rand < 0.85) {
+        type = 'smoke'; icon = '💨'; pts = 150;
+      } else if (rand < 0.94) {
+        type = 'potion'; icon = '🧪'; pts = 250;
+      } else {
+        type = 'bomb'; icon = '☣️'; pts = -100;
+      }
+
+      slicerItems.push({
+        x: w * 0.2 + Math.random() * (w * 0.6),
+        y: h + 20,
+        vx: (Math.random() - 0.5) * 3.5,
+        vy: -(11 + Math.random() * 3.5),
+        rotation: 0,
+        vRot: (Math.random() - 0.5) * 0.12,
+        type: type,
+        icon: icon,
+        pts: pts,
+        radius: 26,
+        sliced: false
+      });
+    }
+
+    function checkSlicerIntersection(p1, p2) {
+      for (let i = 0; i < slicerItems.length; i++) {
+        const item = slicerItems[i];
+        if (item.sliced) continue;
+
+        // Line segment to point distance
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const lenSq = dx * dx + dy * dy;
+        let t = 0;
+        if (lenSq > 0) {
+          t = Math.max(0, Math.min(1, ((item.x - p1.x) * dx + (item.y - p1.y) * dy) / lenSq));
+        }
+        const projX = p1.x + t * dx;
+        const projY = p1.y + t * dy;
+        const distSq = (item.x - projX) * (item.x - projX) + (item.y - projY) * (item.y - projY);
+
+        if (distSq < item.radius * item.radius) {
+          item.sliced = true;
+
+          if (item.type === 'bomb') {
+            slicerScore = Math.max(0, slicerScore - 100);
+            soundFx.buzzer();
+          } else {
+            slicerCount++;
+            slicerScore += item.pts;
+            if (item.type === 'potion') soundFx.potion();
+            else soundFx.strike();
+          }
+
+          updateSlicerUI();
+
+          if (slicerCount >= slicerTarget) {
+            endSlicerGame(true);
+            return;
+          }
+        }
+      }
+    }
+
+    function updateSlicerUI() {
+      const timeEl = document.getElementById('slicerTimerText');
+      if (timeEl) timeEl.textContent = `${slicerTimeLeft}s`;
+      const countEl = document.getElementById('slicerCountText');
+      if (countEl) countEl.textContent = `${slicerCount} / ${slicerTarget}`;
+      const scoreEl = document.getElementById('slicerScoreText');
+      if (scoreEl) scoreEl.textContent = slicerScore;
+    }
+
+    function endSlicerGame(won) {
+      stopSlicerGame();
+      if (won) {
+        soundFx.levelUp();
+        setTimeout(() => {
+          closeSlicerModal();
+          openCravingVictoryModal('Smoke Slicer', slicerScore);
+        }, 500);
+      } else {
+        soundFx.buzzer();
+        const overlay = document.getElementById('slicerStartOverlay');
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          const p = overlay.querySelector('p');
+          if (p) p.textContent = 'Tempo scaduto! Riprova la sfida per annientare la voglia.';
+        }
+      }
+    }
+
+
+    // ========================================================
+    // 7. MINIGAME 5: KI DODGER (RETRO SKY ESCAPE)
+    // ========================================================
+    let dodgerCanvas = null;
+    let dodgerCtx = null;
+    let dodgerAnimFrame = null;
+    let dodgerRunning = false;
+    let dodgerHp = 3;
+    let dodgerGates = 0;
+    const dodgerTargetGates = 8;
+    let dodgerScore = 0;
+    let dodgerHeroY = 140;
+    let dodgerHeroVy = 0;
+    let dodgerPillars = [];
+    let dodgerLastPillarSpawn = 0;
+
+    function openDodgerModal() {
+      document.getElementById('minigameDodgerModal').classList.remove('hidden');
+      dodgerRunning = false;
+      dodgerHp = 3;
+      dodgerGates = 0;
+      dodgerScore = 0;
+      dodgerHeroY = 140;
+      dodgerHeroVy = 0;
+      updateDodgerUI();
+
+      dodgerCanvas = document.getElementById('dodgerCanvas');
+      if (dodgerCanvas) {
+        const parent = dodgerCanvas.parentElement;
+        dodgerCanvas.width = parent ? parent.offsetWidth : 450;
+        dodgerCanvas.height = parent ? parent.offsetHeight : 320;
+        dodgerCtx = dodgerCanvas.getContext('2d');
+      }
+
+      document.getElementById('dodgerStartOverlay').classList.remove('hidden');
+    }
+
+    function closeDodgerModal() {
+      stopDodgerGame();
+      document.getElementById('minigameDodgerModal').classList.add('hidden');
+    }
+
+    function startDodgerGame(e) {
+      if (e) e.stopPropagation();
+      document.getElementById('dodgerStartOverlay').classList.add('hidden');
+      dodgerRunning = true;
+      dodgerHp = 3;
+      dodgerGates = 0;
+      dodgerScore = 0;
+      dodgerHeroY = 140;
+      dodgerHeroVy = -3;
+      dodgerPillars = [];
+      dodgerLastPillarSpawn = performance.now();
+      updateDodgerUI();
+
+      soundFx.strike();
+      if (dodgerAnimFrame) cancelAnimationFrame(dodgerAnimFrame);
+      dodgerAnimFrame = requestAnimationFrame(dodgerLoop);
+    }
+
+    function stopDodgerGame() {
+      dodgerRunning = false;
+      if (dodgerAnimFrame) cancelAnimationFrame(dodgerAnimFrame);
+      dodgerPillars = [];
+    }
+
+    function dodgerFlap() {
+      if (!dodgerRunning) return;
+      dodgerHeroVy = -5.8;
+      soundFx.synthTone(520, 0.12, 'triangle', 0.16);
+    }
+
+    function dodgerLoop(timestamp) {
+      if (!dodgerRunning || !dodgerCtx || !dodgerCanvas) return;
+
+      const w = dodgerCanvas.width;
+      const h = dodgerCanvas.height;
+      dodgerCtx.clearRect(0, 0, w, h);
+
+      // Hero Physics
+      dodgerHeroVy += 0.28; // Gravity
+      dodgerHeroY += dodgerHeroVy;
+
+      if (dodgerHeroY < 15) { dodgerHeroY = 15; dodgerHeroVy = 0; }
+      if (dodgerHeroY > h - 25) {
+        dodgerHeroY = h - 25;
+        dodgerHeroVy = 0;
+      }
+
+      // Spawn Smoke Pillars
+      if (timestamp - dodgerLastPillarSpawn > 1600 && dodgerGates + dodgerPillars.length < dodgerTargetGates + 2) {
+        dodgerLastPillarSpawn = timestamp;
+        const gapHeight = 100;
+        const topHeight = 40 + Math.random() * (h - gapHeight - 80);
+        dodgerPillars.push({
+          x: w + 20,
+          width: 44,
+          topHeight: topHeight,
+          bottomY: topHeight + gapHeight,
+          passed: false,
+          hit: false
+        });
+      }
+
+      // Move & Draw Pillars
+      for (let i = dodgerPillars.length - 1; i >= 0; i--) {
+        const p = dodgerPillars[i];
+        p.x -= 2.4;
+
+        // Draw top pillar (toxic smoke column)
+        dodgerCtx.save();
+        dodgerCtx.fillStyle = p.hit ? 'rgba(239, 68, 68, 0.7)' : 'rgba(147, 51, 234, 0.7)';
+        dodgerCtx.strokeStyle = p.hit ? '#ef4444' : '#a855f7';
+        dodgerCtx.lineWidth = 2;
+
+        // Top rectangle
+        dodgerCtx.fillRect(p.x, 0, p.width, p.topHeight);
+        dodgerCtx.strokeRect(p.x, 0, p.width, p.topHeight);
+
+        // Bottom rectangle
+        dodgerCtx.fillRect(p.x, p.bottomY, p.width, h - p.bottomY);
+        dodgerCtx.strokeRect(p.x, p.bottomY, p.width, h - p.bottomY);
+
+        // Toxic smoke icons inside pillar
+        dodgerCtx.font = "16px sans-serif";
+        dodgerCtx.textAlign = "center";
+        dodgerCtx.fillText("💨", p.x + p.width / 2, p.topHeight - 12);
+        dodgerCtx.fillText("💨", p.x + p.width / 2, p.bottomY + 22);
+
+        dodgerCtx.restore();
+
+        // Hero collision detection (hero circle at x=65, y=dodgerHeroY, r=16)
+        const heroX = 65;
+        const heroR = 15;
+        if (!p.hit && p.x < heroX + heroR && p.x + p.width > heroX - heroR) {
+          if (dodgerHeroY - heroR < p.topHeight || dodgerHeroY + heroR > p.bottomY) {
+            p.hit = true;
+            dodgerHp--;
+            soundFx.buzzer();
+            updateDodgerUI();
+
+            if (dodgerHp <= 0) {
+              endDodgerGame(false);
+              return;
+            }
+          }
+        }
+
+        // Gate passed
+        if (!p.passed && p.x + p.width < heroX) {
+          p.passed = true;
+          if (!p.hit) {
+            dodgerGates++;
+            dodgerScore += 125;
+            soundFx.synthTone(700, 0.15, 'sine', 0.15);
+            updateDodgerUI();
+
+            if (dodgerGates >= dodgerTargetGates) {
+              endDodgerGame(true);
+              return;
+            }
+          }
+        }
+
+        // Remove offscreen pillars
+        if (p.x < -60) {
+          dodgerPillars.splice(i, 1);
+        }
+      }
+
+      // Draw Hero (Ki Flight)
+      dodgerCtx.save();
+      const heroX = 65;
+      dodgerCtx.translate(heroX, dodgerHeroY);
+
+      // Jet exhaust trail
+      dodgerCtx.beginPath();
+      dodgerCtx.arc(-14, 0, 7 + Math.random() * 4, 0, Math.PI * 2);
+      dodgerCtx.fillStyle = "rgba(0, 240, 255, 0.75)";
+      dodgerCtx.shadowColor = "#00f0ff";
+      dodgerCtx.shadowBlur = 12;
+      dodgerCtx.fill();
+
+      // Hero Ki Orb / Avatar
+      dodgerCtx.beginPath();
+      dodgerCtx.arc(0, 0, 16, 0, Math.PI * 2);
+      dodgerCtx.fillStyle = "#facc15";
+      dodgerCtx.shadowColor = "#facc15";
+      dodgerCtx.shadowBlur = 15;
+      dodgerCtx.fill();
+
+      dodgerCtx.font = "18px sans-serif";
+      dodgerCtx.textAlign = "center";
+      dodgerCtx.textBaseline = "middle";
+      dodgerCtx.fillText("⚡", 0, 0);
+
+      dodgerCtx.restore();
+
+      dodgerAnimFrame = requestAnimationFrame(dodgerLoop);
+    }
+
+    function updateDodgerUI() {
+      const hpEl = document.getElementById('dodgerHpDisplay');
+      if (hpEl) {
+        hpEl.textContent = '❤️'.repeat(Math.max(0, dodgerHp)) + '🖤'.repeat(Math.max(0, 3 - dodgerHp));
+      }
+      const gateEl = document.getElementById('dodgerGateCountText');
+      if (gateEl) gateEl.textContent = `${dodgerGates} / ${dodgerTargetGates}`;
+      const scoreEl = document.getElementById('dodgerScoreText');
+      if (scoreEl) scoreEl.textContent = dodgerScore;
+    }
+
+    function endDodgerGame(won) {
+      stopDodgerGame();
+      if (won) {
+        soundFx.levelUp();
+        setTimeout(() => {
+          closeDodgerModal();
+          openCravingVictoryModal('Ki Dodger', dodgerScore);
+        }, 500);
+      } else {
+        soundFx.buzzer();
+        const overlay = document.getElementById('dodgerStartOverlay');
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          const p = overlay.querySelector('p');
+          if (p) p.textContent = 'Scudo esaurito! Riprova il volo per ripulire i polmoni.';
+        }
+      }
+    }
+
+    // Spacebar listener for Ki Dodger
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        const modal = document.getElementById('minigameDodgerModal');
+        if (modal && !modal.classList.contains('hidden')) {
+          e.preventDefault();
+          dodgerFlap();
+        }
+      }
+    });
 
     // --- IMPOSTAZIONI ---
     const settingsModal = document.getElementById('settingsModal');
