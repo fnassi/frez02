@@ -553,14 +553,14 @@
         </div>
       </div>
 
-      <!-- 5 INTERACTIVE ARCADE MINIGAMES SUITE -->
+      <!-- 7 INTERACTIVE ARCADE MINIGAMES SUITE -->
       <div>
         <div class="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold mb-3 flex items-center justify-between">
           <span class="flex items-center gap-2">⚡ SELEZIONA MINIGIOCO PER SCONFIGGERE IL CRAVING (+100 XP + PROMPT DIARIO)</span>
-          <span class="text-[10px] text-amber-400 font-arcade">5 GIOCHI TOTALI</span>
+          <span class="text-[10px] text-amber-400 font-arcade">7 GIOCHI TOTALI</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           
           <!-- GAME 1: CRAVING SMASHER -->
           <div class="bg-gradient-to-b from-amber-950/30 to-cyber-dark border border-amber-500/40 hover:border-amber-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 group">
@@ -606,7 +606,29 @@
             </div>
           </div>
 
-          <!-- GAME 3: KI DEFLECTOR -->
+          <!-- GAME 3: COMBO BREAKER -->
+          <div class="bg-gradient-to-b from-rose-950/30 to-cyber-dark border border-rose-500/40 hover:border-rose-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-rose-500/10 group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2 py-0.5 rounded text-[9px] font-arcade bg-rose-500/20 text-rose-300 border border-rose-500/40">BEAT'EM UP // 50 HITS</span>
+                <span class="text-2xl">🥊💥</span>
+              </div>
+              <h3 class="text-base font-black text-white group-hover:text-rose-300 transition uppercase tracking-wide">
+                Combo Breaker
+              </h3>
+              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                Scarica la frustrazione e la voglia! Alterna pugni sinistri e destri a velocità supersonica contro la sigaretta gigante fino a disintegrarla con una combo da 50 colpi!
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-emerald-400 font-mono font-bold">+100 XP</span>
+              <button onclick="openComboModal(); soundFx.click();" class="badge-cut px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-wider transition active:scale-95 shadow">
+                GIOCA ORA ▶
+              </button>
+            </div>
+          </div>
+
+          <!-- GAME 4: KI DEFLECTOR -->
           <div class="bg-gradient-to-b from-cyan-950/30 to-cyber-dark border border-cyan-500/40 hover:border-cyan-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 group">
             <div>
               <div class="flex items-center justify-between mb-3">
@@ -628,7 +650,7 @@
             </div>
           </div>
 
-          <!-- GAME 4: KI DODGER -->
+          <!-- GAME 5: KI DODGER -->
           <div class="bg-gradient-to-b from-blue-950/30 to-cyber-dark border border-blue-500/40 hover:border-blue-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 group">
             <div>
               <div class="flex items-center justify-between mb-3">
@@ -650,7 +672,29 @@
             </div>
           </div>
 
-          <!-- GAME 5: CYBER NEURO-HACK -->
+          <!-- GAME 6: OXYGEN POP -->
+          <div class="bg-gradient-to-b from-teal-950/30 to-cyber-dark border border-teal-500/40 hover:border-teal-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-teal-500/10 group">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2 py-0.5 rounded text-[9px] font-arcade bg-teal-500/20 text-teal-300 border border-teal-500/40">ZEN BURST // LUNG PURIFIER</span>
+                <span class="text-2xl">🫧🍃</span>
+              </div>
+              <h3 class="text-base font-black text-white group-hover:text-teal-300 transition uppercase tracking-wide">
+                Oxygen Pop
+              </h3>
+              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">
+                Fai scoppiare le sfere pure di ossigeno e acqua che risalgono verso l'alto con suoni armonici rilassanti. Raggiungi 20 bolle pulite per rigenerare i polmoni!
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+              <span class="text-[10px] text-emerald-400 font-mono font-bold">+100 XP</span>
+              <button onclick="openPopModal(); soundFx.click();" class="badge-cut px-3.5 py-1.5 bg-teal-500 hover:bg-teal-400 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 shadow">
+                GIOCA ORA ▶
+              </button>
+            </div>
+          </div>
+
+          <!-- GAME 7: CYBER NEURO-HACK -->
           <div class="bg-gradient-to-b from-purple-950/30 to-cyber-dark border border-purple-500/40 hover:border-purple-400 rounded-xl p-4 flex flex-col justify-between transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-purple-500/10 group">
             <div>
               <div class="flex items-center justify-between mb-3">
@@ -1853,6 +1897,127 @@
     </div>
   </div>
 
+  <!-- MODAL: COMBO BREAKER MINIGAME -->
+  <div id="minigameComboModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="hud-box bg-cyber-panel border-2 border-rose-500 max-w-lg w-full p-4 sm:p-5 text-center space-y-3 shadow-2xl relative select-none">
+      <button onclick="closeComboModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-arcade text-lg">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-xs font-arcade text-rose-400 uppercase tracking-widest">BEAT'EM UP // 50-HIT COMBO</span>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wider glow-crimson">
+          🥊 COMBO BREAKER
+        </h3>
+        <p class="text-xs text-slate-300">
+          Alterna pugni sinistri e destri a raffica per distruggere la sigaretta gigante! Raggiungi 50 colpi combo prima che scada il tempo.
+        </p>
+      </div>
+
+      <!-- Live HUD -->
+      <div class="flex items-center justify-between bg-cyber-dark/80 border border-rose-500/30 rounded-lg px-4 py-2 text-xs font-mono">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">TEMPO:</span>
+          <span id="comboTimerText" class="text-base font-black text-amber-400">20s</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">COMBO:</span>
+          <span id="comboCountText" class="text-xl font-black text-rose-400 animate-pulse">0 / 50</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">RANK:</span>
+          <span id="comboRankText" class="text-xs font-arcade text-cyan-300">START!</span>
+        </div>
+      </div>
+
+      <!-- Giant Cigarette Punching Arena -->
+      <div id="comboArena" class="relative w-full h-64 sm:h-72 bg-gradient-to-b from-slate-950 via-slate-900 to-black rounded-xl border border-rose-500/40 overflow-hidden flex items-center justify-center shadow-inner">
+        <!-- Floating Combo Punch Sparks & Text -->
+        <div id="comboFxContainer" class="absolute inset-0 pointer-events-none flex items-center justify-center z-20"></div>
+
+        <!-- Giant Cigarette Boss Avatar (Animated Shake on Hit) -->
+        <div id="comboMonster" class="flex flex-col items-center transition-transform duration-75 select-none z-10">
+          <div class="text-6xl sm:text-7xl drop-shadow-[0_0_20px_rgba(244,63,94,0.6)]">🚬</div>
+          <div class="w-36 h-3 bg-black/80 rounded-full border border-slate-700/60 blur-[1px] mt-2"></div>
+          <!-- Monster Health/Damage Bar -->
+          <div class="w-44 h-2.5 bg-slate-800 rounded-full overflow-hidden border border-slate-700 mt-2">
+            <div id="comboBossHpBar" class="h-full bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-600 transition-all duration-75" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- Start Overlay -->
+        <div id="comboStartOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-3 p-4 z-30">
+          <span class="text-4xl animate-bounce">🥊</span>
+          <p class="text-xs text-slate-200 font-mono text-center">Premi a raffica Sinistra e Destra con mouse, touch o tasti Q/E o Frecce!</p>
+          <button onclick="startComboGame()" class="badge-cut px-6 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-black text-xs uppercase tracking-wider transition active:scale-95 shadow-lg shadow-rose-600/40">
+            ▶ INIZIA RAFFICA DI PUGNI (20s)
+          </button>
+        </div>
+      </div>
+
+      <!-- Dual Punch Action Buttons -->
+      <div class="grid grid-cols-2 gap-3 pt-1">
+        <button id="punchLeftBtn" onclick="punchCombo('left')" class="badge-cut py-4 bg-gradient-to-r from-red-700 to-rose-600 hover:from-red-600 hover:to-rose-500 text-white font-black text-sm uppercase tracking-wider transition active:scale-90 shadow-lg shadow-rose-900/50 flex items-center justify-center gap-2">
+          <span>🥊 PUGNO SX (Q / ◀)</span>
+        </button>
+        <button id="punchRightBtn" onclick="punchCombo('right')" class="badge-cut py-4 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-black text-sm uppercase tracking-wider transition active:scale-90 shadow-lg shadow-amber-900/50 flex items-center justify-center gap-2">
+          <span>🥊 PUGNO DX (E / ▶)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: OXYGEN POP MINIGAME -->
+  <div id="minigamePopModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="hud-box bg-cyber-panel border-2 border-teal-500 max-w-lg w-full p-4 sm:p-5 text-center space-y-3 shadow-2xl relative select-none">
+      <button onclick="closePopModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-arcade text-lg">✕</button>
+
+      <!-- Header -->
+      <div class="space-y-1">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-xs font-arcade text-teal-400 uppercase tracking-widest">ZEN LUNG PURIFIER // BUBBLE POP</span>
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black text-white uppercase tracking-wider glow-cyan">
+          🫧 OXYGEN POP
+        </h3>
+        <p class="text-xs text-slate-300">
+          Tocca le bolle pure di ossigeno (🫧 +100), acqua (💧 +150) e menta (🍃 +200) per ripulire i polmoni. Evita le bolle di catrame (⚫ -100)!
+        </p>
+      </div>
+
+      <!-- Live HUD -->
+      <div class="flex items-center justify-between bg-cyber-dark/80 border border-teal-500/30 rounded-lg px-4 py-2 text-xs font-mono">
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">TEMPO:</span>
+          <span id="popTimerText" class="text-base font-black text-amber-400">25s</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">OSSIGENO:</span>
+          <span id="popCountText" class="text-base font-black text-teal-400">0 / 20</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-slate-400">PUNTI:</span>
+          <span id="popScoreText" class="text-base font-black text-cyan-400">0</span>
+        </div>
+      </div>
+
+      <!-- Bubble Chamber Arena -->
+      <div id="popArenaContainer" class="relative w-full h-72 sm:h-80 bg-gradient-to-b from-slate-950 via-teal-950/20 to-slate-950 rounded-xl border border-teal-500/40 overflow-hidden cursor-pointer shadow-inner">
+        <div id="popBubblesTrack" class="absolute inset-0"></div>
+
+        <!-- Start Overlay -->
+        <div id="popStartOverlay" class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-3 p-4 z-30">
+          <span class="text-4xl animate-bounce">🫧</span>
+          <p class="text-xs text-slate-200 font-mono text-center">Fai scoppiare 20 bolle d'ossigeno pulite per rigenerare i tuoi polmoni!</p>
+          <button onclick="startPopGame()" class="badge-cut px-6 py-2.5 bg-teal-500 hover:bg-teal-400 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 shadow-lg shadow-teal-500/30">
+            ▶ PURIFICA I POLMONI (25s)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: CRAVING VICTORY & AUTOMATIC DIARY PROMPT -->
   <div id="cravingVictoryModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
     <div class="hud-box bg-cyber-panel border-2 border-emerald-500 max-w-md w-full p-5 sm:p-6 text-center space-y-4 shadow-2xl relative font-sans">
@@ -2369,7 +2534,7 @@
       }
     };
 
-    // --- TRASFORMAZIONI GOKU (8 FORME SBLOCCABILI SOLO CON XP E LIVELLO) ---
+    // --- TRASFORMAZIONI GOKU (8 FORME SBLOCCABILI SOLO CON XP E LIVELLI ELEVATI) ---
     const GOKU_FORMS = [
       {
         minLevel: 1,
@@ -2390,8 +2555,8 @@
         quote: '"Ogni grande guerriero comincia dal primo allenamento. I polmoni puliti sono la sorgente del Ki!"'
       },
       {
-        minLevel: 2,
-        requiredXp: 200,
+        minLevel: 5,
+        requiredXp: 800,
         id: 'ssj1',
         name: 'GOKU (SUPER SAIYAN)',
         title: 'LEGENDARY SUPER SAIYAN',
@@ -2408,8 +2573,8 @@
         quote: '"La rabbia contro la sigaretta è diventata potere dorato puro! Nessun limite può fermarmi!"'
       },
       {
-        minLevel: 4,
-        requiredXp: 600,
+        minLevel: 10,
+        requiredXp: 1800,
         id: 'ssj2',
         name: 'GOKU (SUPER SAIYAN 2)',
         title: 'ASCENDED SAIYAN',
@@ -2426,8 +2591,8 @@
         quote: '"Senti i fulmini del Ki? Questo è il potere oltre il Super Saiyan. Carichi più pesanti in palestra!"'
       },
       {
-        minLevel: 6,
-        requiredXp: 1000,
+        minLevel: 18,
+        requiredXp: 3400,
         id: 'ssj3',
         name: 'GOKU (SUPER SAIYAN 3)',
         title: 'SUPER SAIYAN 3',
@@ -2444,8 +2609,8 @@
         quote: '"E questo... è per andare ancora oltre! Super Saiyan 3! La voglia di fumare svanisce nel nulla!"'
       },
       {
-        minLevel: 8,
-        requiredXp: 1400,
+        minLevel: 28,
+        requiredXp: 5400,
         id: 'god',
         name: 'GOKU (SSJ GOD)',
         title: 'DIVINE SAIYAN',
@@ -2462,8 +2627,8 @@
         quote: '"Il Ki degli Dei scorre nel sangue ossigenato. Calma assoluta e rigenerazione cellulare divina!"'
       },
       {
-        minLevel: 10,
-        requiredXp: 1800,
+        minLevel: 40,
+        requiredXp: 7800,
         id: 'blue',
         name: 'GOKU (SSJ BLUE)',
         title: 'SUPER SAIYAN GOD SS',
@@ -2480,8 +2645,8 @@
         quote: '"Controllo assoluto del Ki divino. Zero battiti sprecati, zero fumo, concentrazione chirurgica!"'
       },
       {
-        minLevel: 12,
-        requiredXp: 2200,
+        minLevel: 55,
+        requiredXp: 10800,
         id: 'ui_sign',
         name: 'GOKU (UI INCOMPLETO)',
         title: 'ULTRA INSTINCT SIGN (SEGNO)',
@@ -2498,8 +2663,8 @@
         quote: '"Il calore del Ki interiore si espande: la mente si svuota da ogni craving. Il corpo reagisce istintivamente."'
       },
       {
-        minLevel: 15,
-        requiredXp: 2800,
+        minLevel: 75,
+        requiredXp: 14800,
         id: 'ui',
         name: 'GOKU (ULTRA ISTINTO COMPLETO)',
         title: 'MASTERED ULTRA INSTINCT (PERFEZIONATO)',
@@ -5071,6 +5236,332 @@
         }
       }
     });
+
+    // ========================================================
+    // 8. MINIGAME 6: COMBO BREAKER (RAPID BEAT'EM UP PUNCHES)
+    // ========================================================
+    let comboTimer = null;
+    let comboRunning = false;
+    let comboTimeLeft = 20;
+    let comboHits = 0;
+    const comboTarget = 50;
+    let comboScore = 0;
+    let comboLastSide = null;
+
+    function openComboModal() {
+      document.getElementById('minigameComboModal').classList.remove('hidden');
+      comboRunning = false;
+      comboHits = 0;
+      comboScore = 0;
+      comboTimeLeft = 20;
+      updateComboUI();
+      document.getElementById('comboStartOverlay').classList.remove('hidden');
+      const monster = document.getElementById('comboMonster');
+      if (monster) monster.style.transform = 'translateX(0px) rotate(0deg) scale(1)';
+      const hpBar = document.getElementById('comboBossHpBar');
+      if (hpBar) hpBar.style.width = '100%';
+    }
+
+    function closeComboModal() {
+      stopComboGame();
+      document.getElementById('minigameComboModal').classList.add('hidden');
+    }
+
+    function startComboGame() {
+      document.getElementById('comboStartOverlay').classList.add('hidden');
+      comboRunning = true;
+      comboHits = 0;
+      comboScore = 0;
+      comboTimeLeft = 20;
+      updateComboUI();
+
+      soundFx.strike();
+
+      clearInterval(comboTimer);
+      comboTimer = setInterval(() => {
+        comboTimeLeft--;
+        updateComboUI();
+        if (comboTimeLeft <= 0) {
+          endComboGame(comboHits >= 40);
+        }
+      }, 1000);
+    }
+
+    function stopComboGame() {
+      comboRunning = false;
+      clearInterval(comboTimer);
+    }
+
+    function punchCombo(side) {
+      if (!comboRunning) return;
+
+      comboHits++;
+      comboScore += 25;
+
+      if (comboLastSide && comboLastSide !== side) {
+        comboScore += 15;
+      }
+      comboLastSide = side;
+
+      soundFx.hit();
+      const monster = document.getElementById('comboMonster');
+      if (monster) {
+        const rot = (side === 'left') ? -12 : 12;
+        const shiftX = (side === 'left') ? 16 : -16;
+        monster.style.transform = `translateX(${shiftX}px) rotate(${rot}deg) scale(0.92)`;
+        setTimeout(() => {
+          if (monster) monster.style.transform = 'translateX(0px) rotate(0deg) scale(1)';
+        }, 80);
+      }
+
+      const fxContainer = document.getElementById('comboFxContainer');
+      if (fxContainer) {
+        const spark = document.createElement('div');
+        spark.className = 'absolute font-black font-arcade text-lg sm:text-2xl floating-score select-none pointer-events-none';
+        const colors = ['#f43f5e', '#fbbf24', '#38bdf8', '#a855f7', '#ffffff'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.color = color;
+        spark.style.textShadow = `0 0 12px ${color}`;
+        spark.style.left = `${40 + (Math.random() - 0.5) * 30}%`;
+        spark.style.top = `${40 + (Math.random() - 0.5) * 20}%`;
+        spark.textContent = (comboHits % 10 === 0) ? `🔥 ${comboHits} COMBO!` : `+${side === 'left' ? 'SX' : 'DX'}!`;
+        fxContainer.appendChild(spark);
+        setTimeout(() => spark.remove(), 600);
+      }
+
+      const hpBar = document.getElementById('comboBossHpBar');
+      if (hpBar) {
+        const remainingPct = Math.max(0, 100 - (comboHits / comboTarget) * 100);
+        hpBar.style.width = `${remainingPct}%`;
+      }
+
+      updateComboUI();
+
+      if (comboHits >= comboTarget) {
+        endComboGame(true);
+      }
+    }
+
+    function updateComboUI() {
+      const timeEl = document.getElementById('comboTimerText');
+      if (timeEl) timeEl.textContent = `${comboTimeLeft}s`;
+      const countEl = document.getElementById('comboCountText');
+      if (countEl) countEl.textContent = `${comboHits} / ${comboTarget}`;
+      const rankEl = document.getElementById('comboRankText');
+      if (rankEl) {
+        if (comboHits < 15) rankEl.textContent = 'GOOD!';
+        else if (comboHits < 30) rankEl.textContent = 'BRUTAL!';
+        else if (comboHits < 45) rankEl.textContent = 'ULTRA COMBO!';
+        else rankEl.textContent = 'K.O. IMMINENTE!';
+      }
+    }
+
+    function endComboGame(won) {
+      stopComboGame();
+      const monster = document.getElementById('comboMonster');
+      if (won) {
+        soundFx.levelUp();
+        if (monster) {
+          monster.style.transform = 'translateY(-120px) rotate(720deg) scale(0)';
+          monster.style.transition = 'all 0.5s ease-in';
+        }
+        setTimeout(() => {
+          closeComboModal();
+          openCravingVictoryModal('Combo Breaker', comboScore);
+        }, 600);
+      } else {
+        soundFx.buzzer();
+        const overlay = document.getElementById('comboStartOverlay');
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          const p = overlay.querySelector('p');
+          if (p) p.textContent = 'Tempo scaduto! Riprova la raffica per abbattere la voglia!';
+        }
+      }
+    }
+
+    // Keydown listener for Combo Breaker (Q/E or ArrowLeft/ArrowRight)
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('minigameComboModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        if (e.code === 'KeyQ' || e.code === 'ArrowLeft') {
+          e.preventDefault();
+          punchCombo('left');
+        } else if (e.code === 'KeyE' || e.code === 'ArrowRight') {
+          e.preventDefault();
+          punchCombo('right');
+        }
+      }
+    });
+
+
+    // ========================================================
+    // 9. MINIGAME 7: OXYGEN POP (ZEN LUNG BUBBLE PURIFIER)
+    // ========================================================
+    let popTimer = null;
+    let popRunning = false;
+    let popTimeLeft = 25;
+    let popCount = 0;
+    const popTarget = 20;
+    let popScore = 0;
+    let popSpawnInterval = null;
+
+    function openPopModal() {
+      document.getElementById('minigamePopModal').classList.remove('hidden');
+      popRunning = false;
+      popCount = 0;
+      popScore = 0;
+      popTimeLeft = 25;
+      updatePopUI();
+      const track = document.getElementById('popBubblesTrack');
+      if (track) track.innerHTML = '';
+      document.getElementById('popStartOverlay').classList.remove('hidden');
+    }
+
+    function closePopModal() {
+      stopPopGame();
+      document.getElementById('minigamePopModal').classList.add('hidden');
+    }
+
+    function startPopGame() {
+      document.getElementById('popStartOverlay').classList.add('hidden');
+      popRunning = true;
+      popCount = 0;
+      popScore = 0;
+      popTimeLeft = 25;
+      updatePopUI();
+
+      const track = document.getElementById('popBubblesTrack');
+      if (track) track.innerHTML = '';
+
+      soundFx.potion();
+
+      clearInterval(popTimer);
+      popTimer = setInterval(() => {
+        popTimeLeft--;
+        updatePopUI();
+        if (popTimeLeft <= 0) {
+          endPopGame(popCount >= 16);
+        }
+      }, 1000);
+
+      clearInterval(popSpawnInterval);
+      popSpawnInterval = setInterval(spawnOxygenBubble, 450);
+    }
+
+    function stopPopGame() {
+      popRunning = false;
+      clearInterval(popTimer);
+      clearInterval(popSpawnInterval);
+      const track = document.getElementById('popBubblesTrack');
+      if (track) track.innerHTML = '';
+    }
+
+    function spawnOxygenBubble() {
+      if (!popRunning) return;
+      const track = document.getElementById('popBubblesTrack');
+      if (!track) return;
+
+      const rand = Math.random();
+      let type = 'oxygen';
+      let icon = '🫧';
+      let pts = 100;
+      let soundFreq = 523.25;
+
+      if (rand < 0.6) {
+        type = 'oxygen'; icon = '🫧'; pts = 100; soundFreq = 587.33;
+      } else if (rand < 0.82) {
+        type = 'water'; icon = '💧'; pts = 150; soundFreq = 659.25;
+      } else if (rand < 0.92) {
+        type = 'mint'; icon = '🍃'; pts = 200; soundFreq = 783.99;
+      } else {
+        type = 'tar'; icon = '⚫'; pts = -100; soundFreq = 160;
+      }
+
+      const bubble = document.createElement('div');
+      const startX = 10 + Math.random() * 80;
+      const speed = 2500 + Math.random() * 1500;
+      const size = 36 + Math.random() * 14;
+
+      bubble.className = 'absolute cursor-pointer flex items-center justify-center rounded-full select-none transition-transform active:scale-75 hover:scale-110';
+      bubble.style.left = `${startX}%`;
+      bubble.style.bottom = '-50px';
+      bubble.style.width = `${size}px`;
+      bubble.style.height = `${size}px`;
+      bubble.style.fontSize = `${size * 0.65}px`;
+      bubble.style.background = (type === 'tar') ? 'rgba(0,0,0,0.6)' : 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.7), rgba(45,212,191,0.25))';
+      bubble.style.border = (type === 'tar') ? '2px solid #ef4444' : '2px solid rgba(45,212,191,0.6)';
+      bubble.style.boxShadow = (type === 'tar') ? '0 0 10px #ef4444' : '0 0 15px rgba(45,212,191,0.5)';
+      bubble.style.transition = `bottom ${speed}ms linear`;
+      bubble.innerHTML = icon;
+
+      bubble.onpointerdown = (e) => {
+        e.stopPropagation();
+        popBubble(bubble, type, pts, soundFreq);
+      };
+
+      track.appendChild(bubble);
+
+      requestAnimationFrame(() => {
+        bubble.style.bottom = '110%';
+      });
+
+      setTimeout(() => {
+        if (bubble.parentElement) bubble.remove();
+      }, speed + 100);
+    }
+
+    function popBubble(el, type, pts, freq) {
+      if (!popRunning) return;
+
+      if (type === 'tar') {
+        soundFx.buzzer();
+        popScore = Math.max(0, popScore - 100);
+      } else {
+        popCount++;
+        popScore += pts;
+        soundFx.synthTone(freq, 0.12, 'sine', 0.2);
+      }
+
+      el.style.transform = 'scale(1.6)';
+      el.style.opacity = '0';
+      el.style.pointerEvents = 'none';
+      setTimeout(() => el.remove(), 200);
+
+      updatePopUI();
+
+      if (popCount >= popTarget) {
+        endPopGame(true);
+      }
+    }
+
+    function updatePopUI() {
+      const timeEl = document.getElementById('popTimerText');
+      if (timeEl) timeEl.textContent = `${popTimeLeft}s`;
+      const countEl = document.getElementById('popCountText');
+      if (countEl) countEl.textContent = `${popCount} / ${popTarget}`;
+      const scoreEl = document.getElementById('popScoreText');
+      if (scoreEl) scoreEl.textContent = popScore;
+    }
+
+    function endPopGame(won) {
+      stopPopGame();
+      if (won) {
+        soundFx.levelUp();
+        setTimeout(() => {
+          closePopModal();
+          openCravingVictoryModal('Oxygen Pop', popScore);
+        }, 500);
+      } else {
+        soundFx.buzzer();
+        const overlay = document.getElementById('popStartOverlay');
+        if (overlay) {
+          overlay.classList.remove('hidden');
+          const p = overlay.querySelector('p');
+          if (p) p.textContent = 'Tempo scaduto! Riprova a purificare i polmoni dalle tossine!';
+        }
+      }
+    }
 
     // --- IMPOSTAZIONI ---
     const settingsModal = document.getElementById('settingsModal');
