@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -236,6 +236,10 @@
 
       <!-- Quick Action Badges -->
       <div class="flex items-center gap-2">
+        <button onclick="openRewardsModal(); soundFx.levelUp();" class="badge-cut px-3 py-1.5 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black text-xs uppercase tracking-wider transition active:scale-95 flex items-center gap-1.5 shadow-lg shadow-amber-500/40 relative">
+          <span>🎁</span> <span class="hidden sm:inline">RICOMPENSE</span>
+          <span id="rewardsAvailableBadge" class="hidden absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[9px] font-black rounded-full w-5 h-5 flex items-center justify-center border border-white animate-bounce shadow">0</span>
+        </button>
         <button onclick="openHeroModal()" class="badge-cut px-3 py-1.5 bg-purple-950 hover:bg-purple-900 border-2 border-purple-500 text-purple-200 text-xs font-bold tracking-wider uppercase transition active:scale-95 flex items-center gap-1.5 shadow-lg shadow-purple-950/50">
           <span>🎮</span> <span class="hidden sm:inline">SELECT</span> HERO
         </button>
@@ -248,6 +252,9 @@
 
     <!-- HUD Quick Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 py-1.5 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar border-t border-slate-800/60 bg-cyber-panel/60">
+      <button onclick="openRewardsModal(); soundFx.click();" class="px-3 py-1 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/50 hover:bg-amber-500/30 transition whitespace-nowrap flex items-center gap-1.5 shadow-sm">
+        <span>🎁</span> <span>BATTLE PASS</span> <span id="navRewardsBadge" class="hidden px-1.5 py-0.2 bg-red-600 text-white text-[9px] rounded-full font-mono font-black animate-pulse">0</span>
+      </button>
       <a href="#sec-minigames" class="px-3 py-1 rounded bg-amber-950/70 text-amber-300 font-bold border border-amber-500/50 hover:bg-amber-900/80 transition whitespace-nowrap flex items-center gap-1.5 shadow-sm">
         <span>🎮</span> <span>MINIGIOCHI</span>
       </a>
@@ -2495,6 +2502,71 @@
     </div>
   </div>
 
+  <!-- MODAL: PERCORSO RICOMPENSE // BATTLE PASS ESPERIENZA -->
+  <div id="rewardsModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+    <div class="hud-box bg-cyber-panel border border-amber-500/70 p-4 sm:p-6 rounded-2xl w-full max-w-4xl max-h-[92vh] flex flex-col shadow-[0_0_40px_rgba(245,158,11,0.35)] relative animate-fade-in font-sans">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-amber-500/30 pb-3 mb-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 p-0.5 border border-amber-300 flex items-center justify-center text-2xl shadow">
+            🎁
+          </div>
+          <div>
+            <div class="text-[9px] font-mono text-amber-400 font-bold uppercase tracking-widest">EXPERIENCE MILESTONES // BATTLE PASS</div>
+            <h3 class="text-base sm:text-lg font-black text-white uppercase tracking-wider glow-gold">Percorso Ricompense & Prestigio</h3>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="claimAllAvailableRewards(); soundFx.levelUp();" class="badge-cut px-3 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black text-[11px] font-mono uppercase tracking-wider transition shadow-md active:scale-95 flex items-center gap-1">
+            <span>⚡</span> RISCATTA TUTTE
+          </button>
+          <button onclick="closeRewardsModal()" class="text-slate-400 hover:text-white text-xl font-bold p-1">✕</button>
+        </div>
+      </div>
+
+      <!-- Player Battle Pass Status HUD -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3 font-mono text-xs">
+        <div class="bg-cyber-dark border border-slate-800 rounded-xl p-2.5 text-center">
+          <div class="text-[8px] text-slate-400 uppercase font-bold">EROE ATTIVO</div>
+          <div id="rewardsActiveHeroName" class="text-xs font-black text-white uppercase truncate mt-0.5">Goku (LV.10)</div>
+        </div>
+        <div class="bg-cyber-dark border border-amber-500/40 rounded-xl p-2.5 text-center">
+          <div class="text-[8px] text-amber-400 uppercase font-bold">ACCOUNT PRESTIGE</div>
+          <div id="rewardsMaxAccountLvl" class="text-xs font-black text-amber-300 font-arcade mt-0.5">LIVELLO MAX: 10</div>
+        </div>
+        <div class="bg-cyber-dark border border-emerald-500/40 rounded-xl p-2.5 text-center">
+          <div class="text-[8px] text-emerald-400 uppercase font-bold">XP BOOSTER</div>
+          <div id="rewardsActiveBooster" class="text-xs font-black text-emerald-300 mt-0.5">+10% XP ATTIVO</div>
+        </div>
+        <div class="bg-cyber-dark border border-cyan-500/40 rounded-xl p-2.5 text-center flex flex-col justify-center">
+          <button onclick="resetEquippedCosmetics()" class="text-[10px] text-slate-400 hover:text-red-400 transition underline">
+            Ripristina Cosmetici Base
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Equipped Cosmetics Bar -->
+      <div class="flex items-center justify-between text-[11px] font-mono px-3 py-1.5 bg-cyber-dark/80 rounded-lg border border-slate-800 mb-3 text-slate-300">
+        <span id="rewardsEquippedTitleDisplay" class="truncate font-bold text-cyan-300">TITOLO: [PREDEFINITO EROE]</span>
+        <span id="rewardsEquippedAuraDisplay" class="truncate font-bold text-amber-300 hidden sm:inline">AURA: [PREDEFINITA EROE]</span>
+      </div>
+
+      <!-- Scrollable List of Reward Tiers -->
+      <div id="rewardsTiersList" class="flex-1 overflow-y-auto pr-1 space-y-2.5 font-mono text-xs">
+        <!-- Populated dynamically via renderRewardsTrack() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="border-t border-slate-800 pt-3 mt-3 flex justify-between items-center text-[10px] font-mono text-slate-400">
+        <div>💡 <em>Man mano che accumuli XP e sali di livello con qualsiasi combattente, sblocchi titoli, aure e booster passivi!</em></div>
+        <button onclick="closeRewardsModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded font-bold uppercase transition">
+          CHIUDI
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // --- KI & COMBAT PARTICLE ENGINE ---
     const ParticleEngine = {
@@ -3458,6 +3530,457 @@
       updateLiveStats();
     }
 
+    // --- SISTEMA RICOMPENSE / BATTLE PASS ESPERIENZA ---
+    const REWARDS_DB = [
+      {
+        id: 'tier_1',
+        level: 2,
+        name: 'Recluta del Respiro Puro',
+        type: 'title',
+        icon: '🎖️',
+        category: 'TITOLO ONORARIO',
+        desc: 'Sblocca il titolo onorario "Recluta del Respiro Puro" equipaggiabile sul profilo + 50 XP bonus.',
+        titleValue: 'Recluta del Respiro Puro',
+        xpBonus: 50
+      },
+      {
+        id: 'tier_2',
+        level: 3,
+        name: 'Scintille del Guerriero',
+        type: 'particles',
+        icon: '⚡',
+        category: 'EFFETTO PARTICELLE',
+        desc: 'Potenziamento particelle dorate per lo standee con scintille elettriche del Ki.',
+        particlePreset: { type: 'sparks', color: '#facc15', speed: 1.8, size: 3.5, count: 35 },
+        xpBonus: 50
+      },
+      {
+        id: 'tier_3',
+        level: 4,
+        name: 'Aura Cyber-Ciano Neon',
+        type: 'aura',
+        icon: '🔮',
+        category: 'AURA STANDEE',
+        desc: 'Aura splendente ciano cyberpunk equipaggiabile sullo standee di qualsiasi combattente.',
+        auraValue: { name: 'Aura Cyber-Ciano Neon', color: '#00f0ff', rgba: 'rgba(0, 240, 255, 0.65)' },
+        xpBonus: 80
+      },
+      {
+        id: 'tier_4',
+        level: 5,
+        name: 'Guerriero d\'Acciaio & XP Booster +5%',
+        type: 'booster',
+        icon: '🏆',
+        category: 'PERK PASSIVO + TITOLO',
+        desc: 'Titolo "Guerriero d\'Acciaio" + moltiplicatore permanente del +5% su TUTTI gli XP guadagnati!',
+        titleValue: 'Guerriero d\'Acciaio',
+        boosterPct: 5,
+        xpBonus: 0
+      },
+      {
+        id: 'tier_5',
+        level: 7,
+        name: 'Cacciatore di Scuse',
+        type: 'title',
+        icon: '🔥',
+        category: 'TITOLO ONORARIO',
+        desc: 'Nessuna scusa per fumare o saltare l\'allenamento. Titolo fiammeggiante equipaggiabile.',
+        titleValue: 'Cacciatore di Scuse',
+        xpBonus: 100
+      },
+      {
+        id: 'tier_6',
+        level: 8,
+        name: 'Aura Cremisi Berserk',
+        type: 'aura',
+        icon: '🩸',
+        category: 'AURA STANDEE',
+        desc: 'Aura cremisi da battaglia ispirata alla determinazione indomabile di Guts e Devil Jin.',
+        auraValue: { name: 'Aura Cremisi Berserk', color: '#ef4444', rgba: 'rgba(239, 68, 68, 0.70)' },
+        xpBonus: 120
+      },
+      {
+        id: 'tier_7',
+        level: 10,
+        name: 'Signore del Super Saiyan & XP Booster +10%',
+        type: 'booster',
+        icon: '👑',
+        category: 'PRESTIGIO + PERK PASSIVO',
+        desc: 'Titolo epico "Signore del Super Saiyan", Aura Oro Trascendente ed XP Booster permanente del +10%!',
+        titleValue: 'Signore del Super Saiyan',
+        auraValue: { name: 'Aura Oro Trascendente', color: '#f59e0b', rgba: 'rgba(245, 158, 11, 0.75)' },
+        boosterPct: 10,
+        xpBonus: 150
+      },
+      {
+        id: 'tier_8',
+        level: 12,
+        name: 'Spacca-Nicotina & Saette Ki',
+        type: 'title',
+        icon: '⚡',
+        category: 'TITOLO & LIGHTNING FX',
+        desc: 'Titolo "Spacca-Nicotina" con scosse di fulmini blu che circondano il combattente.',
+        titleValue: 'Spacca-Nicotina',
+        xpBonus: 150
+      },
+      {
+        id: 'tier_9',
+        level: 15,
+        name: 'Dominatore dell\'Infinito',
+        type: 'title',
+        icon: '💎',
+        category: 'TITOLO LEGGENDARIO',
+        desc: 'Ispirato all\'Infinito di Satoru Gojo: la tentazione non può più toccarti.',
+        titleValue: 'Dominatore dell\'Infinito',
+        xpBonus: 200
+      },
+      {
+        id: 'tier_10',
+        level: 18,
+        name: 'Aura Viola Mugen & XP Booster +15%',
+        type: 'booster',
+        icon: '🌌',
+        category: 'AURA + PERK PASSIVO',
+        desc: 'Aura viola cosmica espansa + XP Booster permanente potenziato al +15% su ogni azione!',
+        titleValue: 'Leggenda Berserk',
+        auraValue: { name: 'Aura Viola Mugen', color: '#a855f7', rgba: 'rgba(168, 85, 247, 0.75)' },
+        boosterPct: 15,
+        xpBonus: 250
+      },
+      {
+        id: 'tier_11',
+        level: 20,
+        name: 'Guerriero Immortale',
+        type: 'title',
+        icon: '🛡️',
+        category: 'TITOLO SUPREMO',
+        desc: '20 Livelli di salute riconquistata! Sei una roccia inespugnabile di pura forza di volontà.',
+        titleValue: 'Guerriero Immortale',
+        xpBonus: 300
+      },
+      {
+        id: 'tier_12',
+        level: 25,
+        name: 'Divinità del Fitness & XP Booster +20%',
+        type: 'booster',
+        icon: '🌟',
+        category: 'PERK PASSIVO + TITOLO',
+        desc: 'Titolo divino + Booster XP passivo che raggiunge il +20% permanente su tutta l\'app!',
+        titleValue: 'Divinità del Fitness',
+        boosterPct: 20,
+        xpBonus: 350
+      },
+      {
+        id: 'tier_13',
+        level: 30,
+        name: 'Aura Divina Arcobaleno Trascendente',
+        type: 'aura',
+        icon: '🌈',
+        category: 'AURA LEGGENDARIA',
+        desc: 'Aura prismatica ad alta luminosità che riflette tutti gli elementi del Ki.',
+        auraValue: { name: 'Aura Arcobaleno Trascendente', color: '#38bdf8', rgba: 'rgba(56, 189, 248, 0.85)' },
+        titleValue: 'Campione dei Campioni',
+        xpBonus: 400
+      },
+      {
+        id: 'tier_14',
+        level: 40,
+        name: 'Dio della Distruzione del Vizio & XP Booster +25%',
+        type: 'booster',
+        icon: '💥',
+        category: 'MAX BOOSTER + TITOLO',
+        desc: 'Booster XP passivo massimo del +25% e titolo leggendario supremo!',
+        titleValue: 'Distruttore del Vizio',
+        boosterPct: 25,
+        xpBonus: 500
+      },
+      {
+        id: 'tier_15',
+        level: 50,
+        name: 'Maestro dell\'Ultra Istinto Assoluto',
+        type: 'trophy',
+        icon: '✨',
+        category: 'TROFEO DIVINO DEFINITIVO',
+        desc: 'Il vertice supremo di HealthQuest: l\'Ultra Istinto perfetto, salute e potenza divina inattaccabili!',
+        titleValue: 'Ultra Istinto Assoluto',
+        auraValue: { name: 'Aura Ultra Istinto Suprema', color: '#ffffff', rgba: 'rgba(255, 255, 255, 0.95)' },
+        xpBonus: 1000
+      }
+    ];
+
+    function getMaxAccountLevel() {
+      if (!config.heroesProgress) return config.heroLevel || 1;
+      let maxLvl = 1;
+      Object.keys(config.heroesProgress).forEach(h => {
+        const lvl = config.heroesProgress[h].level || 1;
+        if (lvl > maxLvl) maxLvl = lvl;
+      });
+      return maxLvl;
+    }
+
+    function getActiveXpBoosterPct() {
+      let booster = 0;
+      if (!config.claimedRewards) return 0;
+      if (config.claimedRewards.includes('tier_14')) booster = 25;
+      else if (config.claimedRewards.includes('tier_12')) booster = 20;
+      else if (config.claimedRewards.includes('tier_10')) booster = 15;
+      else if (config.claimedRewards.includes('tier_7')) booster = 10;
+      else if (config.claimedRewards.includes('tier_4')) booster = 5;
+      return booster;
+    }
+
+    function openRewardsModal() {
+      const modal = document.getElementById('rewardsModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      renderRewardsTrack();
+    }
+
+    function closeRewardsModal() {
+      const modal = document.getElementById('rewardsModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function updateRewardsBadge() {
+      const maxLvl = getMaxAccountLevel();
+      config.claimedRewards = config.claimedRewards || [];
+      const unclaimed = REWARDS_DB.filter(r => maxLvl >= r.level && !config.claimedRewards.includes(r.id));
+      
+      const badge = document.getElementById('rewardsAvailableBadge');
+      const navBadge = document.getElementById('navRewardsBadge');
+      
+      if (badge) {
+        if (unclaimed.length > 0) {
+          badge.textContent = unclaimed.length;
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+      }
+      if (navBadge) {
+        if (unclaimed.length > 0) {
+          navBadge.textContent = unclaimed.length;
+          navBadge.classList.remove('hidden');
+        } else {
+          navBadge.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderRewardsTrack() {
+      const maxLvl = getMaxAccountLevel();
+      const currentHeroLvl = getHeroLevel(config.selectedHero);
+      config.claimedRewards = config.claimedRewards || [];
+
+      // Statistiche Header
+      const heroNameEl = document.getElementById('rewardsActiveHeroName');
+      if (heroNameEl) {
+        const hero = HEROES[config.selectedHero] || HEROES.goku;
+        heroNameEl.textContent = `${hero.name} (LV.${currentHeroLvl})`;
+      }
+
+      const maxLvlEl = document.getElementById('rewardsMaxAccountLvl');
+      if (maxLvlEl) maxLvlEl.textContent = `LIVELLO MAX: ${maxLvl}`;
+
+      const boosterPct = getActiveXpBoosterPct();
+      const boosterEl = document.getElementById('rewardsActiveBooster');
+      if (boosterEl) boosterEl.textContent = boosterPct > 0 ? `+${boosterPct}% XP BOOSTER ATTIVO` : `NESSUN BOOSTER ATTIVO`;
+
+      const titleEl = document.getElementById('rewardsEquippedTitleDisplay');
+      if (titleEl) titleEl.textContent = config.equippedTitle ? `TITOLO: ${config.equippedTitle}` : `TITOLO: [PREDEFINITO EROE]`;
+
+      const auraEl = document.getElementById('rewardsEquippedAuraDisplay');
+      if (auraEl) auraEl.textContent = config.equippedAura ? `AURA: ${config.equippedAura.name}` : `AURA: [PREDEFINITA EROE]`;
+
+      const listContainer = document.getElementById('rewardsTiersList');
+      if (!listContainer) return;
+      listContainer.innerHTML = '';
+
+      REWARDS_DB.forEach(reward => {
+        const isUnlocked = maxLvl >= reward.level;
+        const isClaimed = config.claimedRewards.includes(reward.id);
+        const card = document.createElement('div');
+        
+        let borderClass = 'border-slate-800 bg-cyber-dark/60 opacity-60';
+        if (isClaimed) {
+          borderClass = 'border-emerald-500/40 bg-cyber-dark hover:border-emerald-500/70';
+        } else if (isUnlocked) {
+          borderClass = 'border-amber-400 bg-gradient-to-r from-amber-950/40 via-cyber-dark to-cyber-dark shadow-lg shadow-amber-500/20';
+        }
+
+        card.className = `p-3.5 rounded-xl border ${borderClass} flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition font-mono`;
+
+        let actionBtnHtml = '';
+        if (!isUnlocked) {
+          actionBtnHtml = `
+            <div class="px-3 py-1.5 rounded bg-slate-900 border border-slate-700 text-slate-500 text-xs font-bold whitespace-nowrap flex items-center gap-1.5 self-start sm:self-center">
+              <span>🔒</span> BLOCCATO (LV.${reward.level})
+            </div>
+          `;
+        } else if (!isClaimed) {
+          actionBtnHtml = `
+            <button onclick="claimReward('${reward.id}')" class="badge-cut px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-black font-black text-xs uppercase tracking-wider transition whitespace-nowrap active:scale-95 shadow-lg shadow-amber-500/40 flex items-center gap-1.5 animate-pulse self-start sm:self-center">
+              <span>🎁</span> RISCATTA ORA!
+            </button>
+          `;
+        } else {
+          let equipControls = '';
+          if (reward.titleValue) {
+            const isEquipped = config.equippedTitle === reward.titleValue;
+            equipControls += `
+              <button onclick="toggleEquipTitle('${reward.titleValue}')" class="px-2.5 py-1 text-[11px] rounded font-bold transition whitespace-nowrap ${isEquipped ? 'bg-cyan-500 text-black shadow' : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'}">
+                ${isEquipped ? '⭐ IN USO' : 'EQUIPAGGIA TITOLO'}
+              </button>
+            `;
+          }
+          if (reward.auraValue) {
+            const isEquipped = config.equippedAura && config.equippedAura.name === reward.auraValue.name;
+            equipControls += `
+              <button onclick='toggleEquipAura(${JSON.stringify(reward.auraValue)})' class="px-2.5 py-1 text-[11px] rounded font-bold transition whitespace-nowrap ${isEquipped ? 'bg-amber-400 text-black shadow' : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'}">
+                ${isEquipped ? '⭐ AURA ATTIVA' : 'EQUIPAGGIA AURA'}
+              </button>
+            `;
+          }
+
+          actionBtnHtml = `
+            <div class="flex items-center gap-2 flex-wrap self-start sm:self-center">
+              <span class="text-xs text-emerald-400 font-bold flex items-center gap-1">
+                <span>✅</span> RISCATTATO
+              </span>
+              ${equipControls}
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="flex items-start sm:items-center gap-3 flex-1">
+            <div class="w-12 h-12 rounded-xl bg-cyber-panel border ${isUnlocked ? 'border-amber-400' : 'border-slate-800'} flex items-center justify-center text-2xl flex-shrink-0 shadow">
+              ${reward.icon}
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-[9px] font-arcade px-1.5 py-0.5 rounded ${isUnlocked ? 'bg-amber-500 text-black font-black' : 'bg-slate-800 text-slate-400'}">
+                  LIVELLO ${reward.level}
+                </span>
+                <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">${reward.category}</span>
+                ${reward.xpBonus > 0 ? `<span class="text-[9px] text-emerald-400 font-bold font-mono">+${reward.xpBonus} XP</span>` : ''}
+              </div>
+              <h4 class="text-sm font-black text-white uppercase mt-0.5">${reward.name}</h4>
+              <p class="text-xs text-slate-400 font-sans mt-0.5">${reward.desc}</p>
+            </div>
+          </div>
+          ${actionBtnHtml}
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function claimReward(rewardId) {
+      const reward = REWARDS_DB.find(r => r.id === rewardId);
+      if (!reward) return;
+
+      const maxLvl = getMaxAccountLevel();
+      if (maxLvl < reward.level) {
+        alert("Non hai ancora raggiunto il livello richiesto!");
+        return;
+      }
+
+      config.claimedRewards = config.claimedRewards || [];
+      if (config.claimedRewards.includes(rewardId)) return;
+
+      config.claimedRewards.push(rewardId);
+
+      if (reward.titleValue && !config.equippedTitle) {
+        config.equippedTitle = reward.titleValue;
+      }
+      if (reward.auraValue && !config.equippedAura) {
+        config.equippedAura = reward.auraValue;
+      }
+
+      if (reward.xpBonus > 0) {
+        addHeroXp(reward.xpBonus, `Bonus ${reward.name}`);
+      }
+
+      localStorage.setItem('respira_config', JSON.stringify(config));
+      soundFx.levelUp();
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
+
+      updateRewardsBadge();
+      renderRewardsTrack();
+      updateHeroUI();
+
+      alert(`🎁 RICOMPENSA RISCATTATA!\nHai sbloccato: ${reward.name}!`);
+    }
+
+    function claimAllAvailableRewards() {
+      const maxLvl = getMaxAccountLevel();
+      config.claimedRewards = config.claimedRewards || [];
+      const unclaimed = REWARDS_DB.filter(r => maxLvl >= r.level && !config.claimedRewards.includes(r.id));
+
+      if (unclaimed.length === 0) {
+        alert("Nessuna nuova ricompensa da riscattare al momento!");
+        return;
+      }
+
+      let totalBonusXp = 0;
+      unclaimed.forEach(reward => {
+        config.claimedRewards.push(reward.id);
+        if (reward.titleValue && !config.equippedTitle) config.equippedTitle = reward.titleValue;
+        if (reward.auraValue && !config.equippedAura) config.equippedAura = reward.auraValue;
+        if (reward.xpBonus > 0) totalBonusXp += reward.xpBonus;
+      });
+
+      if (totalBonusXp > 0) {
+        addHeroXp(totalBonusXp, "Bonus Ricompense Riscattate");
+      }
+
+      localStorage.setItem('respira_config', JSON.stringify(config));
+      soundFx.levelUp();
+      confetti({ particleCount: 200, spread: 90, origin: { y: 0.5 } });
+
+      updateRewardsBadge();
+      renderRewardsTrack();
+      updateHeroUI();
+
+      alert(`🎉 Tutte le ${unclaimed.length} ricompense disponibili sono state riscattate con successo!\n${totalBonusXp > 0 ? `+${totalBonusXp} XP Bonus accreditati!` : ''}`);
+    }
+
+    function toggleEquipTitle(titleName) {
+      if (config.equippedTitle === titleName) {
+        config.equippedTitle = null;
+      } else {
+        config.equippedTitle = titleName;
+      }
+      localStorage.setItem('respira_config', JSON.stringify(config));
+      soundFx.click();
+      renderRewardsTrack();
+      updateHeroUI();
+    }
+
+    function toggleEquipAura(auraObj) {
+      if (config.equippedAura && config.equippedAura.name === auraObj.name) {
+        config.equippedAura = null;
+      } else {
+        config.equippedAura = auraObj;
+      }
+      localStorage.setItem('respira_config', JSON.stringify(config));
+      soundFx.click();
+      renderRewardsTrack();
+      updateHeroUI();
+    }
+
+    function resetEquippedCosmetics() {
+      config.equippedTitle = null;
+      config.equippedAura = null;
+      localStorage.setItem('respira_config', JSON.stringify(config));
+      soundFx.click();
+      renderRewardsTrack();
+      updateHeroUI();
+    }
+
     // --- GOKU EVOLUTION HELPERS (AUTOMATIC UNLOCK BY LEVEL & XP) ---
     function getGokuActiveForm() {
       const currentLevel = getHeroLevel('goku');
@@ -3488,10 +4011,15 @@
         config.heroesProgress[heroId] = { xp: 0, level: 1 };
       }
 
+      // Applica eventuale XP Booster passivo sbloccato dal Battle Pass
+      const boosterPct = getActiveXpBoosterPct();
+      const bonusXp = boosterPct > 0 ? Math.round(amount * (boosterPct / 100)) : 0;
+      const effectiveAmount = amount + bonusXp;
+
       const oldLevel = config.heroesProgress[heroId].level || 1;
       const oldForm = (heroId === 'goku') ? getGokuActiveForm() : null;
 
-      config.heroesProgress[heroId].xp = (config.heroesProgress[heroId].xp || 0) + amount;
+      config.heroesProgress[heroId].xp = (config.heroesProgress[heroId].xp || 0) + effectiveAmount;
       const newLevel = Math.floor(config.heroesProgress[heroId].xp / 200) + 1;
       const leveledUp = newLevel > oldLevel;
       config.heroesProgress[heroId].level = newLevel;
@@ -3502,6 +4030,7 @@
 
       localStorage.setItem('respira_config', JSON.stringify(config));
       updateHeroUI();
+      updateRewardsBadge();
 
       if (leveledUp) {
         confetti({ particleCount: 160, spread: 90, origin: { y: 0.5 } });
@@ -3510,13 +4039,13 @@
           const newForm = getGokuActiveForm();
           if (oldForm && newForm.id !== oldForm.id) {
             triggerHeroCheer();
-            alert(`⚡ TRASFORMAZIONE RISVEGLIATA! Goku è salito al Livello ${newLevel}: sbloccato ${newForm.name}! Aura e Ki amplificati!`);
+            alert(`⚡ TRASFORMAZIONE RISVEGLIATA! Goku è salito al Livello ${newLevel}: sbloccato ${newForm.name}! Nuove ricompense nel Battle Pass!`);
           } else {
-            alert(`🌟 LEVEL UP! Goku è salito al Livello ${newLevel}! Continua ad allenarti per sbloccare la prossima evoluzione!`);
+            alert(`🌟 LEVEL UP! Goku è salito al Livello ${newLevel}! Nuove ricompense sbloccate nel Battle Pass!`);
           }
         } else {
           const hero = HEROES[heroId] || HEROES.goku;
-          alert(`🌟 LEVEL UP! Il tuo ${hero.name} è salito al Livello ${newLevel}! Statistiche aumentate!`);
+          alert(`🌟 LEVEL UP! Il tuo ${hero.name} è salito al Livello ${newLevel}! Nuove ricompense sbloccate nel Battle Pass!`);
         }
       }
     }
@@ -3629,8 +4158,9 @@
       const nameEl = document.getElementById('standeeHeroName');
       if (nameEl) nameEl.textContent = displayHero.name;
 
+      const effectiveTitle = config.equippedTitle || displayHero.title;
       const titleEl = document.getElementById('standeeHeroTitle');
-      if (titleEl) titleEl.textContent = `${displayHero.title} • ${displayHero.series}`;
+      if (titleEl) titleEl.textContent = `${effectiveTitle} • ${displayHero.series}`;
 
       const watermarkEl = document.getElementById('standeeSeriesWatermark');
       if (watermarkEl) watermarkEl.textContent = displayHero.series;
@@ -3652,16 +4182,19 @@
       const standeeXpText = document.getElementById('standeeXpText');
       if (standeeXpText) standeeXpText.textContent = `${xpInCurrentLevel} / 200 XP`;
 
-      // Standee Aura & Border Glow Theme
+      // Standee Aura & Border Glow Theme (supporta aure cosmetiche sbloccate)
+      const activeAuraRgba = (config.equippedAura && config.equippedAura.rgba) || displayHero.auraRgba || 'rgba(0,240,255,0.45)';
+      const activeAuraColor = (config.equippedAura && config.equippedAura.color) || displayHero.themeColor || '#00f0ff';
+
       const auraEl = document.getElementById('heroAuraGlow');
       if (auraEl) {
-        auraEl.style.background = `radial-gradient(circle at 50% 60%, ${displayHero.auraRgba || 'rgba(0,240,255,0.45)'} 0%, rgba(0,0,0,0) 70%)`;
+        auraEl.style.background = `radial-gradient(circle at 50% 60%, ${activeAuraRgba} 0%, rgba(0,0,0,0) 70%)`;
       }
       const standeeCard = document.getElementById('standeeCard');
       if (standeeCard) {
-        standeeCard.style.setProperty('--hero-aura', displayHero.themeColor || '#00f0ff');
-        standeeCard.style.borderColor = displayHero.themeColor || '#00f0ff';
-        standeeCard.style.boxShadow = `0 10px 35px ${displayHero.auraRgba || 'rgba(0,240,255,0.25)'}`;
+        standeeCard.style.setProperty('--hero-aura', activeAuraColor);
+        standeeCard.style.borderColor = activeAuraColor;
+        standeeCard.style.boxShadow = `0 10px 35px ${activeAuraRgba}`;
       }
 
       // Dynamic Ki Particles
@@ -3675,7 +4208,7 @@
       const topName = document.getElementById('heroNameTitle');
       if (topName) topName.textContent = displayHero.name;
       const topTag = document.getElementById('heroTagBadge');
-      if (topTag) topTag.textContent = displayHero.title;
+      if (topTag) topTag.textContent = effectiveTitle;
       const topLvl = document.getElementById('heroLevelBadge');
       if (topLvl) topLvl.textContent = `LV.${currentLvl}`;
       const topXpBar = document.getElementById('heroXpBar');
@@ -4809,6 +5342,7 @@
     function saveCravingDiary() {
       localStorage.setItem('respira_craving_diary', JSON.stringify(cravingDiary));
       updateDiaryUI();
+    updateRewardsBadge();
     }
 
     function formatDiaryDate(d) {
@@ -4987,6 +5521,7 @@
 
     function openCravingDiaryModal() {
       updateDiaryUI();
+    updateRewardsBadge();
       document.getElementById('cravingDiaryModal').classList.remove('hidden');
     }
 
@@ -6578,6 +7113,7 @@
     renderSleepRecord();
     updateLiveStats();
     updateDiaryUI();
+    updateRewardsBadge();
     applyPreferencesToUI();
     setInterval(updateLiveStats, 1000);
 
